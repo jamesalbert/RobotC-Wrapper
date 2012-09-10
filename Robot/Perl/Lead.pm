@@ -7,14 +7,7 @@ use Carp qw/croak/;
 
 use parent qw/Robot::Perl/;
 
-#printf("Config file directory: ");
-
-#my $input = <>;
-
-#$input =~ s/\s//g if $input =~ m/\s/g;
-#croak "Must specify a config file." if (!$input);
-
-our $data = LoadFile('/home/jbert/dev/Robot/Perl/data.yaml');
+our $data = LoadFile('/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml');
 
 sub new {
     my ( $class, %opt ) = @_;
