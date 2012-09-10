@@ -121,7 +121,7 @@ sub if_active {
 
 sub pragma {
     my ( $self, %opt ) = @_;
-    print "#pragma config(Sensor, $opt{in}, $opt{name}, sensor$opt{type});\n";
+    return "#pragma config(Sensor, $opt{in}, $opt{name}, sensor$opt{type});\n";
 };
 
 sub reflect {
@@ -141,7 +141,7 @@ sub motor {
 
 sub speed_up {
     my ( $self, %opt ) = @_;
-    printf("motor[%s] += %d;\n", $opt{port}, $opt{speed});
+    return "motor[$opt{port}] += $opt{speed};\n";
 }
 
 sub clear_time {
