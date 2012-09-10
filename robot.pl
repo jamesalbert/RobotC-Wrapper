@@ -5,12 +5,10 @@ use warnings;
 use YAML qw/LoadFile/;
 use Robot::Perl::Lead;
 
-our $d = LoadFile('/home/jbert/dev/Robot/Perl/data.yaml');
-
 my $SV = "SensorValue";
 
 my $r = Robot::Perl::Lead->new(
-    config  => "/home/jbert/dev/Robot/Perl/data.yaml",
+    config  => "/Robot/Perl/data.yaml",
 );
 
 $r->start_robot((
