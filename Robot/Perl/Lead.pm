@@ -32,14 +32,14 @@ sub easy_start {
 }
 
 sub wait_5 {
-    my ( $self ) = shift;
+    my $self = shift;
     return $self->start_void( 'wait_5', (
         $self->wait( dur => 5000 )
     ));
 }
 
 sub drive {
-    my ( $self ) = shift;
+    my $self = shift;
     return $self->start_void( 'drive', (
         $self->motor( port  => $data->{port2}, speed => $data->{f_speed} ),
         $self->motor( port  => $data->{port3}, speed => $data->{f_speed} )
@@ -47,7 +47,7 @@ sub drive {
 }
 
 sub turn_left {
-    my ( $self ) = shift;
+    my $self = shift;
 
     return $self->start_void('turn_left',(
         $self->motor( port  => $data->{port2}, speed => $data->{rf_speed} ),
@@ -64,7 +64,7 @@ sub halt {
 }
 
 sub turn_right {
-    my ( $self ) = shift;
+    my $self = shift;
 
     return $self->start_void( 'turn_right',(
         $self->motor( port  => $data->{port2}, speed => $data->{f_speed}  ),
@@ -73,7 +73,7 @@ sub turn_right {
 }
 
 sub set_cont {
-    my ( $self ) = shift;
+    my $self = shift;
     return $self->start_void( 'cont',(
         $self->cont( port => $data->{port2}, channel => $data->{ch3} ),
         $self->cont( port => $data->{port3}, channel => $data->{ch2} )
@@ -81,7 +81,7 @@ sub set_cont {
 }
 
 sub basic_movements {
-    my ( $self ) = shift;
+    my $self = shift;
     return $self->drive,
     $self->turn_left,
     $self->turn_right,
