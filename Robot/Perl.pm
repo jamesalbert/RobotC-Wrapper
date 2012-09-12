@@ -2,14 +2,25 @@ package Robot::Perl;
 
 use strict;
 use warnings;
-#use YAML qw/LoadFile/;
+use YAML qw/LoadFile/;
 
 sub new {
     my ( $class, %opt ) = @_;
-    my $self = {};
-    bless $self, $class;
-    return $self;
+    my $self = {
+        test => "cat"
+    };
+    return bless $self, $class;
 };
+
+sub yams {
+    my ( $self, $val ) = @_;
+    my $yaml = LoadFile('/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml');
+    return ("$yaml->{$val}\n");
+}
+
+=head1 NAME
+WHOS
+=cut
 
 sub start_void {
     my ( $self, $name, @tasks ) = @_;

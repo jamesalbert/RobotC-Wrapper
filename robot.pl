@@ -1,8 +1,6 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 
 use strict;
-use warnings;
-use YAML qw/LoadFile/;
 use Robot::Perl::Lead;
 
 my $SV = "SensorValue";
@@ -10,6 +8,23 @@ my $SV = "SensorValue";
 my $r = Robot::Perl::Lead->new(
     config  => "/Robot/Perl/data.yaml",
 );
+
+my $bag = {};
+
+bless($bag, 'Robot::Perl::Lead');
+
+my $hat = Robot::Perl->new(
+    config => "cat"
+);
+
+$bag->start_robot((
+    $r->pragma( in => "in3", name => "button2", type => "Touch")
+    )
+);
+
+sub hey_there {
+    return "I dont know why i say hello\n";
+}
 
 $r->start_robot((
     $r->pragma( in => "in2", name => "button", type => "Touch"),

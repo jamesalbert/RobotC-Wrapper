@@ -11,24 +11,27 @@ our $data = LoadFile('/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml');
 
 sub new {
     my ( $class, %opt ) = @_;
-
-    #if ( !$opt{config} ) {
-    #    croak "you must specify a config file";
-    #}
-
-    #our $data = LoadFile('/home/jbert/dev/Robot/Perl/data.yaml');
-
-    my $self = $class->SUPER::new(
-        config => $opt{config}
-    );
+    my $self = {
+        false => "false",
+        true  => "true",
+        port2 => "port2",
+        port3 => "port3",
+        fulls => 127,
+        fullr => -127,
+        stop  => 0,
+        chan2 => "Ch2",
+        chan3 => "Ch3"
+    };
 
     return bless $self, $class;
 }
 
 sub easy_start {
     my ( $self, $port ) = @_;
-    return $self->auto( "false" ),
-    $self->reflect( port => $data->{port3}, bool => $data->{true} );
+    my $a = $self->SUPER::auto( "false" );
+    my $r = $self->SUPER::reflect( port => "port3", bool => "true" );
+    my $y = $self->SUPER::yams( "port2" );
+    return $a, $r, $y;
 }
 
 sub wait_5 {
@@ -41,8 +44,8 @@ sub wait_5 {
 sub drive {
     my $self = shift;
     return $self->start_void( 'drive', (
-        $self->motor( port  => $data->{port2}, speed => $data->{f_speed} ),
-        $self->motor( port  => $data->{port3}, speed => $data->{f_speed} )
+        $self->motor( port  => $self->{port2}, speed => $self->{fulls} ),
+        $self->motor( port  => $self->{port3}, speed => $self->{fulls} )
     ));
 }
 
@@ -50,16 +53,16 @@ sub turn_left {
     my $self = shift;
 
     return $self->start_void('turn_left',(
-        $self->motor( port  => $data->{port2}, speed => $data->{rf_speed} ),
-        $self->motor( port  => $data->{port3}, speed => $data->{f_speed}  )
+        $self->motor( port  => $self->{port2}, speed => $self->{fullr} ),
+        $self->motor( port  => $self->{port3}, speed => $self->{fulls}  )
     ));
 }
 
 sub halt {
     my $self = shift;
     return $self->start_void( 'halt', (
-        $self->motor( port => $data->{port2}, speed => $data->{stop} ),
-        $self->motor( port => $data->{port3}, speed => $data->{stop} )
+        $self->motor( port => $self->{port2}, speed => $self->{stop} ),
+        $self->motor( port => $self->{port3}, speed => $self->{stop} )
     ));
 }
 
@@ -67,16 +70,16 @@ sub turn_right {
     my $self = shift;
 
     return $self->start_void( 'turn_right',(
-        $self->motor( port  => $data->{port2}, speed => $data->{f_speed}  ),
-        $self->motor( port  => $data->{port3}, speed => $data->{rf_speed} )
+        $self->motor( port  => $self->{port2}, speed => $self->{fulls}  ),
+        $self->motor( port  => $self->{port3}, speed => $self->{fullr} )
     ));
 }
 
 sub set_cont {
     my $self = shift;
     return $self->start_void( 'cont',(
-        $self->cont( port => $data->{port2}, channel => $data->{ch3} ),
-        $self->cont( port => $data->{port3}, channel => $data->{ch2} )
+        $self->cont( port => $self->{port2}, channel => $self->{chan3} ),
+        $self->cont( port => $self->{port3}, channel => $self->{chan2} )
     ));
 }
 
