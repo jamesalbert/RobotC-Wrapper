@@ -18,10 +18,6 @@ sub yams {
     return ("$yaml->{$val}\n");
 }
 
-=head1 NAME
-WHOS
-=cut
-
 sub start_void {
     my ( $self, $name, @tasks ) = @_;
     return "void $name() {\n", @tasks, $self->end;
