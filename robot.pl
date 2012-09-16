@@ -1,3 +1,11 @@
+=pod
+
+=head1 NAME
+
+RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
+
+=head1 Synopsis
+
 #!/usr/bin/perl -w
 
 use strict;
@@ -21,3 +29,15 @@ $r->start_robot((
         ))
     ))
 ));
+
+=head2 Description
+
+=head1 Robot::Perl
+
+The Robot::Perl base library has a series of functions that you can call which will spit out RobotC. Start by initiating it.
+
+use Robot::Perl;
+
+my $r = Robot::Perl->new;
+
+=cut
