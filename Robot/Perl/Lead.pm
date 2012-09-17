@@ -30,7 +30,7 @@ sub easy_start {
     my ( $self, $port ) = @_;
     my $a = $self->SUPER::auto( "false" );
     my $r = $self->SUPER::reflect( port => "port3", bool => "true" );
-    my $y = $self->SUPER::yams( "port2" );
+    my $y = $data->{port2};
     return $a, $r, $y;
 }
 
