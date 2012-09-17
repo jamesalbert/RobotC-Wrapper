@@ -371,8 +371,9 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
     Converts parameter from radians to degrees
 
-=head3 AUTHOR
+=head3 AUTHORS
 
-    James Albert james.albert72@gmail.com
+    James Albert <james.albert72@gmail.com>
+    Casey Vega   <casey.vega@gmail.com>
 
 =cut
