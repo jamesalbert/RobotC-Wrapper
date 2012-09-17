@@ -37,7 +37,7 @@ sub easy_start {
 sub wait_5 {
     my $self = shift;
     return $self->start_void( 'wait_5', (
-        $self->wait( dur => 5000 )
+        $self->wait( dur => 5 )
     ));
 }
 

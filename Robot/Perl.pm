@@ -7,14 +7,13 @@ use YAML qw/LoadFile/;
 
 sub new {
     my ( $class, %opt ) = @_;
-    my $self = {
-        test => "cat"
-    };
+    my $self = {};
     return bless $self, $class;
 };
 
 sub start_void {
     my ( $self, $name, @tasks ) = @_;
+    die "Name must not be comprised of integers." if $name =~ m/\d+/;
     return "void $name() {\n", @tasks, $self->end;
 };
 
@@ -202,6 +201,11 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
         $r->pragma( in => "in2", name => "button", type => "Touch"),
         $r->easy_start( "port2" ),
         $r->basic_movements,
+        $r->start_void( "turn_around", (
+            $r->motor( port => "port2", speed => 127 ),
+            $r->motor( port => "port3", speed => -127 )
+            $r->wait(1);
+        )),
         $r->start_task((
             $r->start_while( "true", (
                 $r->call( "cont" ),
@@ -217,91 +221,105 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
 =head1 ROBOT::PERL
 
-The Robot::Perl base library has a series of functions that you can call which will spit out RobotC. Start by initiating it.
+    The Robot::Perl base library has a series of functions that you can call which will spit out RobotC.
+    Start by initiating it.
 
-use Robot::Perl;
+    use Robot::Perl;
 
-my $r = Robot::Perl->new;
+    my $r = Robot::Perl->new;
 
 =head1 LIST OF FUNCTIONS
 
 =head4 start_robot(@tasks)
 
-    should be called as the first function after Robot::Perl::Whatever->new. This function prints everything.
+    Should be called as the first function after Robot::Perl::Whatever->new. This function
+    prints everything.
 
     $r->start_robot(( task_1, task_2, task_3 ));
 
+    Remember that all functions, loops, and statements in RobotPerl take an array as the last
+    parameter so don't forget to close the array and parameter parenthesis and separate each
+    function with commas.
+
 =head4 start_void($name, @tasks)
 
-    starts a void function.
+    Starts a void function. $name is the name of the function being declared, and @tasks
+    is a list of functions to be executed once called.
 
 =head4 start_task(@tasks)
 
-    starts the main task.
+    Starts the main task. This function must always be present in RobotPerl.
 
 =head4 start_if($condition, @tasks)
 
-    starts an if statement. Two arguments are required: a condition and a list of functions to call when true.
+    Starts an if statement. $condition is, of course, the condition, and @tasks work the
+    same way as any other start_* function.
 
 =head4 start_for(init => $init, end => $end, @tasks)
 
-    starts a for loop. Takes three arguments: an start value ( usually 0 ), an end value, and a list of functions to call when true.
+    Starts a for loop. Takes three arguments: an start value ( usually 0 ), an end value,
+    and a list of functions to call when true.
 
 =head4 start_while($condition, @tasks)
 
-    starts a while loop. Takes two arguments: the condition and a list of tasks to execute once true.
+    Starts a while loop. Takes two arguments: the condition and a list of tasks to execute once true.
 
 =head4 end()
 
-    prints a brace "}" and starts a newline.
+    Prints a brace "}" and starts a newline.
 
 =head4 var(type => $num, name => $name, value => $value)
 
-    declares a new variable, takes three arguments: a number symbolizing data type ( 1-3; 1 => int, 2 => char, 3 => long ), name, and value.
+    Declares a new variable, takes three arguments: a number symbolizing data
+    type ( 1-3; 1 => int, 2 => char, 3 => long ), name, and value.
 
 =head4 battery(name => $variable_name)
 
-    declares a variable containing the current battery level, takes the variable name as the only argument.
+    Declares a variable containing the current battery level, takes the variable
+    name as the only argument.
 
 =head4 kill(task => $any_function)
 
-    kills the function specified as a parameter.
+    Kills the function specified as a parameter.
 
 =head4 mute()
 
-    turns off all tones and sounds.
+    Turns off all tones and sounds.
 
 =head4 sound(freq => $frequency, dur => $duration)
 
-    plays a tone, takes two arguments: frequency, and duration.
+    Plays a tone, takes two arguments: frequency, and duration.
 
 =head4 tone(tone => "beep")
 
-    plays tone, takes one parameter: must be "buzz", "beep", or "click".
+    Plays tone, takes one parameter: must be "buzz", "beep", or "click".
 
 =head4 sound_power(bool => "true")
 
-    turns sound on and off, true or false as a parameter.
+    Turns sound on and off, true or false as a parameter.
 
 =head4 if_sound(@tasks)
 
-    starts an if statement with a predeclared condition (if sound is available), and takes one argument which is a list of tasks to execute once true.
+    Starts an if statement with a predeclared condition (if sound is available),
+    and takes one argument which is a list of tasks to execute once true.
 
 =head4 if_active(@tasks)
 
-    does the same thing as if_sound, but checks for controller activity. Still takes a list of tasks.
+    Does the same thing as if_sound, but checks for controller activity.
+    Still takes a list of tasks.
 
 =head4 pragma(in => "in2", name => $name, type => "Touch")
 
-    sets up sensors. Should be the first thing called after start_robot. Takes three parameters: in port, name, and sensor type ("Touch, SONAR, etc").
+    Sets up sensors. Should be the first thing called after start_robot.
+    Takes three parameters: in port, name, and sensor type ("Touch, SONAR, etc").
 
 =head4 reflect(port => $port2, bool => "true")
 
-    reflects a designated port, takes two parameters: port name ( "port2", "port3", etc ), and boolean ( most likely true ).
+    Reflects a designated port, takes two parameters: port name ( "port2", "port3", etc ), and boolean ( most likely true ).
 
 =head4 auto(bool => "true")
 
-    toggles autonomous mode depending on the boolean parameter.
+    Toggles autonomous mode depending on the boolean parameter.
 
 =head4 motor(port => $port2, speed => $speed)
 
@@ -335,22 +353,26 @@ my $r = Robot::Perl->new;
 
 =head4 cos($var)
 
-    equal to the cosine of $var.
+    Equal to the cosine of $var.
 
 =head4 sin($var)
 
-    equal to the sin of var.
+    Equal to the sin of var.
 
 =head4 tan($var)
 
-    equal to the tangent of $var.
+    Equal to the tangent of $var.
 
 =head4 d_r($var)
 
-    converts parameter from degrees to radians
+    Converts parameter from degrees to radians
 
 =head4 r_d($var)
 
-    converts parameter from radians to degrees
+    Converts parameter from radians to degrees
+
+=head3 AUTHOR
+
+    James Albert james.albert72@gmail.com
 
 =cut
