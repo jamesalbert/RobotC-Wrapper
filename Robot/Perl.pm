@@ -163,7 +163,7 @@ sub time_while {
 
 sub wait {
     my ( $self, $dur ) = @_;
-    return "wait1Msec($dur'000');\n";
+    return "wait1Msec(", $dur, "000);\n";
 };
 
 sub cont {

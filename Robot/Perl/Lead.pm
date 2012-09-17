@@ -34,10 +34,10 @@ sub easy_start {
     return $a, $r, $y;
 }
 
-sub wait_5 {
+sub wait_five {
     my $self = shift;
-    return $self->start_void( 'wait_5', (
-        $self->wait( dur => 5 )
+    return $self->start_void( 'wait_five', (
+        $self->wait(5)
     ));
 }
 
@@ -89,7 +89,7 @@ sub basic_movements {
     $self->turn_left,
     $self->turn_right,
     $self->halt,
-    $self->wait_5,
+    $self->wait_five,
     $self->set_cont;
 }
 
