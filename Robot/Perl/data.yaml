@@ -1,7 +1,7 @@
 ---
 motor_port:
-    0: port1
-    1: port2
+    right: port1
+    left: port2
     2: port3
     3: port4
     4: port5
