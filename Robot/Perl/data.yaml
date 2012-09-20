@@ -1,33 +1,24 @@
 ---
-port1: port1
-port2: port2
-port3: port3
-port4: port4
-port5: port5
-port6: port6
-in1: in1
-in2: in2
-in3: in3
-in4: in4
-in5: in5
-in6: in6
-f_speed: 127
-rf_speed: -127
-h_speed: 63
-rh_speed: -63
-stop: 0
-true: true
-false: false
-ch2: Ch2
-ch3: Ch3
-button: button
-eyes: eyes
-sonar: sensorSONAR
-touch: sensorTouch
-cont: cont
-tl: turn_left
-tr: turn_right
-d: drive
-wait: wait_5
-val: SensorValue
-halt: halt
+motor_port:
+    0: port1
+    1: port2
+    2: port3
+    3: port4
+    4: port5
+    5: port6
+channel:
+    0: Ch1
+    1: Ch2
+    2: Ch3
+    3: Ch4
+    4: Ch5
+    5: Ch6
+speed:
+    forward: 127
+    reverse: -127
+    stopped: 0
+auto:
+    state: false
+reflect:
+    state: true
+    port: port3

@@ -31,7 +31,13 @@ __DATA__
 
 @@ site.html.ep
 
-<a href="http://imgur.com/13eid"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
+<head>
+
+<link href="http://i.imgur.com/13eid.png" rel="icon" type="image/x-icon" />
+
+</head>
+
+<a href="/"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
 
 <p><code><i>A fully functional RobotC wrapper</i></code></p>
 
@@ -60,7 +66,7 @@ body { background-color:F2F2F2; }
 
 <a href="/" target="_blank">Home</a><br />
 
-<a href="http://imgur.com/13eid"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
+<a href="/"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
 
 <style type="text/css">
 body { background-color:F2F2F2; }
@@ -76,7 +82,7 @@ body { background-color:F2F2F2; }
 
 <a href="/" target="_blank">Home</a> <a href="/contact" target="_blank">Report a bug</a><br />
 
-<a href="http://imgur.com/13eid"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
+<a href="/"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
 
 <h1>The Comparison</h1>
 
@@ -168,9 +174,10 @@ wait_5();
 
 <textarea rows="40" cols="75" readonly="readonly" disabled="disabled">
 
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
+use warnings;
 use Robot::Perl::Lead;
 
 my $SV = "SensorValue";
@@ -241,7 +248,7 @@ wait_5();
 
 <a href="/" target="_blank">Home</a> <a href="/contact" target="_blank">Report a bug</a><br />
 
-<a href="http://imgur.com/13eid"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
+<a href="/"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
 
 <style type="text/css">
 html { background-color:F2F2F2; }

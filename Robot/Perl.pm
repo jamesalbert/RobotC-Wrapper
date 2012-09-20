@@ -12,29 +12,28 @@ sub new {
 };
 
 sub start_void {
-    my ( $self, $name, @tasks ) = @_;
-    die "Name must not be comprised of integers." if $name =~ m/\d+/;
-    return "void $name() {\n", @tasks, $self->end;
+    my ( $self, $name ) = @_;
+    return print "void $name() {\n";
 };
 
 sub start_task {
-    my ($self, @tasks) = @_;
-    return "task main() {\n", @tasks, $self->end;
+    my $self = shift;
+    return print "task main() {\n";
 };
 
 sub start_if {
-    my ( $self, $cond, @tasks ) = @_;
-    return "if ( $cond ) {\n", @tasks, $self->end;
+    my ( $self, $cond ) = @_;
+    return print "if ( $cond ) {\n";
 };
 
 sub start_for {
-    my ( $self, %opt, @tasks ) = @_;
-    return "for (int i = $opt{init}; i < $opt{end}; i++) {\n", @tasks, $self->end;
+    my ( $self, %opt ) = @_;
+    return print "for (int i = $opt{init}; i < $opt{end}; i++) {\n";
 }
 
 sub end {
     my ( $self, %opt ) = @_;
-    return "}\n";
+    return print "}\n";
 };
 
 sub var {
@@ -45,135 +44,128 @@ sub var {
         case 2 {$t = "char"}
         case 3 {$t = "long"}
     };
-    return "$t $opt{name} = $opt{value};\n";
+    return print "$t $opt{name} = $opt{value};\n";
 }
 
 sub battery {
     my ( $self, %opt ) = @_;
-    return "int $opt{name} = nImmediateBatteryLevel;\n";
+    return print "int $opt{name} = nImmediateBatteryLevel;\n";
 }
 
 sub cos {
     my ( $self, %opt ) = @_;
-    return "cos($opt{radians});\n";
+    return print "cos($opt{radians});\n";
 }
 
 sub sin {
     my ( $self, %opt ) = @_;
-    return "sin($opt{radians});\n";
+    return print "sin($opt{radians});\n";
 }
 
 sub tan {
     my ( $self, %opt ) = @_;
-    return "tan($opt{radians});\n";
+    return print "tan($opt{radians});\n";
 }
 
 sub d_r {
     my ( $self, %opt ) = @_;
-    return "degreesToRadians($opt{degrees});\n";
+    return print "degreesToRadians($opt{degrees});\n";
 }
 
 sub r_d {
     my ( $self, %opt ) = @_;
-    return "radiansToDegrees($opt{radians});\n";
+    return print "radiansToDegrees($opt{radians});\n";
 }
 
 sub kill {
     my ( $self, %opt ) = @_;
-    return "StopTask($opt{task});\n";
+    return print "StopTask($opt{task});\n";
 }
 
 sub mute {
     my $self = shift;
-    return "ClearSounds();\n";
+    return print "ClearSounds();\n";
 }
 
 sub sound {
     my ( $self, %opt ) = @_;
-    return "PlayImmediateTone($opt{freq},$opt{dur});\n";
+    return print "PlayImmediateTone($opt{freq},$opt{dur});\n";
 }
 
 sub tone {
     my ( $self, %opt ) = @_;
     die "Must be 'buzz', 'beep', or 'click'" if $opt{tone} =! m/(buzz|beep|click)/;
-    return "PlaySound($opt{tone});\n";
+    return print "PlaySound($opt{tone});\n";
 }
 
 sub sound_power {
     my ( $self, %opt ) = @_;
-    return "bPlaySounds = $opt{bool};\n";
+    return print "bPlaySounds = $opt{bool};\n";
 }
 
 sub start_while {
-    my ( $self, $cond, @tasks ) = @_;
-    return "while ($cond) {\n", @tasks, $self->end;
-}
-
-sub start_robot {
-    my ( $self, @tasks ) = @_;
-    foreach my $task (@tasks){
-        print $task;
-    }
+    my ( $self, $cond ) = @_;
+    return print "while ($cond) {\n";
 }
 
 sub if_sound {
-    my ( $self, @tasks ) = @_;
-    return "if(bHasSoundDriver){\n", @tasks, $self->end;
+    my ( $self ) = @_;
+    return print "if(bHasSoundDriver){\n";
 }
 
 sub if_active {
-    my ( $self, @tasks ) = @_;
-    return "if(bVEXNETActive = true){\n", @tasks, $self->end;
+    my ( $self ) = @_;
+    return print "if(bVEXNETActive = true){\n";
 }
 
 sub pragma {
     my ( $self, %opt ) = @_;
-    return "#pragma config(Sensor, $opt{in}, $opt{name}, sensor$opt{type});\n";
+    return print "#pragma config(Sensor, $opt{in}, $opt{name}, sensor$opt{type});\n";
 };
 
 sub reflect {
     my ( $self, %opt ) = @_;
-    return "bMotorReflected[$opt{port}] = $opt{bool};\n";
+    return print "bMotorReflected[$opt{port}] = $opt{bool};\n";
 };
 
 sub auto {
     my ( $self, $bool ) = @_;
-    return "bVexAutonomousMode = $bool;\n";
+    return print "bVexAutonomousMode = $bool;\n";
 };
 
 sub motor {
     my ( $self, %opt ) = @_;
-    return "motor[$opt{port}] = $opt{speed};\n";
+    return print "motor[$opt{port}] = $opt{speed};\n";
 };
 
 sub speed_up {
     my ( $self, %opt ) = @_;
-    return "motor[$opt{port}] += $opt{speed};\n";
+    return print "motor[$opt{port}] += $opt{speed};\n";
 }
 
 sub clear_time {
     my $self = shift;
-    return "ClearTimer(T1);\n";
+    return print "ClearTimer(T1);\n";
 }
 
 sub time_while {
-    my ($self, $end, @tasks) = @_;
-    return "while(Time1[T1] <= $end){\n", @tasks, $self->end;
+    my ($self, $end, ) = @_;
+    return print "while(Time1[T1] <= $end){\n", , $self->end;
 }
 
 sub wait {
     my ( $self, $dur ) = @_;
-    return "wait1Msec(", $dur, "000);\n";
+    return print "wait1Msec(", $dur, "000);\n";
 };
 
 sub cont {
     my ( $self, %opt ) = @_;
-    return "motor[$opt{port}] = vexRT[$opt{channel}];\n";
+    return print "motor[$opt{port}] = vexRT[$opt{channel}];\n";
 };
 
 sub call {
     my ( $self, $call ) = @_;
-    return "$call();\n";
+    return print "$call();\n";
 };
 
 1;
@@ -230,7 +222,7 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
 =head1 LIST OF FUNCTIONS
 
-=head4 start_robot(@tasks)
+=head4 start_robot()
 
     Should be called as the first function after Robot::Perl::Whatever->new. This function
     prints everything.
@@ -241,26 +233,26 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
     parameter so don't forget to close the array and parameter parenthesis and separate each
     function with commas.
 
-=head4 start_void($name, @tasks)
+=head4 start_void($name, )
 
-    Starts a void function. $name is the name of the function being declared, and @tasks
+    Starts a void function. $name is the name of the function being declared, and 
     is a list of functions to be executed once called.
 
-=head4 start_task(@tasks)
+=head4 start_task()
 
     Starts the main task. This function must always be present in RobotPerl.
 
-=head4 start_if($condition, @tasks)
+=head4 start_if($condition, )
 
-    Starts an if statement. $condition is, of course, the condition, and @tasks work the
+    Starts an if statement. $condition is, of course, the condition, and  work the
     same way as any other start_* function.
 
-=head4 start_for(init => $init, end => $end, @tasks)
+=head4 start_for(init => $init, end => $end, )
 
     Starts a for loop. Takes three arguments: an start value ( usually 0 ), an end value,
     and a list of functions to call when true.
 
-=head4 start_while($condition, @tasks)
+=head4 start_while($condition, )
 
     Starts a while loop. Takes two arguments: the condition and a list of tasks to execute once true.
 
@@ -298,12 +290,12 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
     Turns sound on and off, true or false as a parameter.
 
-=head4 if_sound(@tasks)
+=head4 if_sound()
 
     Starts an if statement with a predeclared condition (if sound is available),
     and takes one argument which is a list of tasks to execute once true.
 
-=head4 if_active(@tasks)
+=head4 if_active()
 
     Does the same thing as if_sound, but checks for controller activity.
     Still takes a list of tasks.
@@ -333,7 +325,7 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
     Clears and starts a timer.
 
-=head4 time_while($what_time_to_stop, @tasks)
+=head4 time_while($what_time_to_stop, )
 
     Takes two arguments: a time limit which makes the condition false, and a list of tasks to execute while true.
 
