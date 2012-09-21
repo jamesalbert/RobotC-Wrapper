@@ -1,20 +1,20 @@
 bVexAutonomousMode = false;
 bMotorReflected[port3] = true;
 void drive() {
-motor[portport1] = 127;
-motor[portport2] = 127;
+motor[port1] = 127;
+motor[port2] = 127;
 }
 void turn_left() {
-motor[portport1] = -127;
-motor[portport2] = 127;
+motor[port1] = -127;
+motor[port2] = 127;
 }
 void turn_right() {
-motor[portport1] = 127;
-motor[portport2] = -127;
+motor[port1] = 127;
+motor[port2] = -127;
 }
 void halt() {
-motor[portport1] = 0;
-motor[portport2] = 0;
+motor[port1] = 0;
+motor[port2] = 0;
 }
 void cont() {
 motor[port1] = vexRT[Ch3];
