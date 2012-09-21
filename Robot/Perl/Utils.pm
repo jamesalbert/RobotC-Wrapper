@@ -26,43 +26,78 @@ sub new {
 sub drive {
     my $self = shift;
     $self->start_void( 'drive' );
-        $self->motor( port  => $self->{conf}->{motor_port}->{right}, speed => $self->{conf}->{speed}->{forward} );
-        $self->motor( port  => $self->{conf}->{motor_port}->{left}, speed => $self->{conf}->{speed}->{forward} );
+    $self->motor(
+        port  => $self->{conf}->{motor_port}->{right},
+        speed => $self->{conf}->{speed}->{forward}
+    );
+    $self->motor(
+        port  => $self->{conf}->{motor_port}->{left},
+        speed => $self->{conf}->{speed}->{forward}
+    );
     $self->end;
+    return $self;
 }
 
 sub turn_left {
     my $self = shift;
 
     $self->start_void('turn_left');
-        $self->motor( port  => $self->{conf}->{motor_port}->{right}, speed => $self->{conf}->{speed}->{reverse} );
-        $self->motor( port  => $self->{conf}->{motor_port}->{left}, speed => $self->{conf}->{speed}->{forward} );
+    $self->motor(
+        port  => $self->{conf}->{motor_port}->{right},
+        speed => $self->{conf}->{speed}->{reverse}
+    );
+    $self->motor(
+        port  => $self->{conf}->{motor_port}->{left},
+        speed => $self->{conf}->{speed}->{forward}
+    );
     $self->end;
+    return $self;
 }
 
 sub halt {
     my $self = shift;
     $self->start_void( 'halt' );
-        $self->motor( port => $self->{conf}->{motor_port}->{right}, speed => $self->{conf}->{speed}->{stopped} );
-        $self->motor( port => $self->{conf}->{motor_port}->{left}, speed => $self->{conf}->{speed}->{stopped} );
+    $self->motor(
+        port => $self->{conf}->{motor_port}->{right},
+        speed => $self->{conf}->{speed}->{stopped}
+    );
+    $self->motor(
+        port => $self->{conf}->{motor_port}->{left},
+        speed => $self->{conf}->{speed}->{stopped}
+    );
     $self->end;
+    return $self;
 }
 
 sub turn_right {
     my $self = shift;
 
     $self->start_void( 'turn_right' );
-        $self->motor( port  => $self->{conf}->{motor_port}->{right}, speed => $self->{conf}->{speed}->{forward} );
-        $self->motor( port  => $self->{conf}->{motor_port}->{left}, speed => $self->{conf}->{speed}->{reverse} );
+    $self->motor(
+        port  => $self->{conf}->{motor_port}->{right},
+        speed => $self->{conf}->{speed}->{forward}
+    );
+    $self->motor(
+        port  => $self->{conf}->{motor_port}->{left},
+        speed => $self->{conf}->{speed}->{reverse}
+    );
     $self->end;
+    return $self;
 }
 
 sub set_cont {
     my $self = shift;
     $self->start_void( 'cont' );
-        $self->cont( port => $self->{conf}->{motor_port}->{right}, channel => $self->{conf}->{channel}->{2} );
-        $self->cont( port => $self->{conf}->{motor_port}->{left}, channel => $self->{conf}->{channel}->{1} );
+    $self->cont(
+        port => $self->{conf}->{motor_port}->{right},
+        channel => $self->{conf}->{channel}->{2}
+    );
+    $self->cont(
+        port => $self->{conf}->{motor_port}->{left},
+        channel => $self->{conf}->{channel}->{1}
+    );
     $self->end;
+    return $self;
 }
 
 sub basic_movements {
