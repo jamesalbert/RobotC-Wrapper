@@ -94,7 +94,9 @@ sub sound {
 
 sub tone {
     my ( $self, %opt ) = @_;
-    die "Must be 'buzz', 'beep', or 'click'" if $opt{tone} =! m/(buzz|beep|click)/;
+    if ( $opt{tone} =! m/(buzz|beep|click)/ ) {
+        die "Must be 'buzz', 'beep', or 'click'";
+    }
     return print "PlaySound($opt{tone});\n";
 }
 
@@ -125,7 +127,7 @@ sub pragma {
 
 sub reflect {
     my ( $self, %opt ) = @_;
-    return print "bMotorReflected[port$opt{port}] = $opt{bool};\n";
+    return print "bMotorReflected[$opt{port}] = $opt{bool};\n";
 };
 
 sub auto {
@@ -160,7 +162,7 @@ sub wait {
 
 sub cont {
     my ( $self, %opt ) = @_;
-    return print "motor[port$opt{port}] = vexRT[Ch$opt{channel}];\n";
+    return print "motor[port$opt{port}] = vexRT[$opt{channel}];\n";
 };
 
 sub call {
