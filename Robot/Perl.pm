@@ -135,7 +135,7 @@ sub auto {
 
 sub motor {
     my ( $self, %opt ) = @_;
-    return print "motor[$opt{port}] = $opt{speed};\n";
+    return print "motor[port$opt{port}] = $opt{speed};\n";
 };
 
 sub speed_up {
@@ -183,31 +183,23 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
     #!/usr/bin/perl -w
 
     use strict;
-    use Robot::Perl::Lead;
+    use Robot::Perl::Utils;
 
     my $SV = "SensorValue";
 
-    my $r = Robot::Perl::Lead->new;
+    my $r = Robot::Perl::Utils->new(
+        config => "/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml"
+    );
 
-    $r->start_robot((
-        $r->pragma( in => "in2", name => "button", type => "Touch"),
-        $r->easy_start( "port2" ),
-        $r->basic_movements,
-        $r->start_void( "turn_around", (
-            $r->motor( port => "port2", speed => 127 ),
-            $r->motor( port => "port3", speed => -127 )
-            $r->wait(1);
-        )),
-        $r->start_task((
-            $r->start_while( "true", (
-                $r->call( "cont" ),
-                $r->start_if( "$SV(button) == 1", (
-                        $r->call( "halt" ),
-                        $r->call( "wait_5" )
-                ))
-            ))
-        ))
-    ));
+    $r->basic_movements;
+    $r->start_task;
+    $r->call( "drive" );
+    $r->start_while( "true" );
+    $r->start_if( "true" );
+    $r->call( "turn_left" );
+    $r->end;
+    $r->end;
+    $r->end;
 
 =head2 DESCRIPTION
 
@@ -222,39 +214,25 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
 =head1 LIST OF FUNCTIONS
 
-=head4 start_robot()
+=head4 start_void($name)
 
-    Should be called as the first function after Robot::Perl::Whatever->new. This function
-    prints everything.
-
-    $r->start_robot(( task_1, task_2, task_3 ));
-
-    Remember that all functions, loops, and statements in RobotPerl take an array as the last
-    parameter so don't forget to close the array and parameter parenthesis and separate each
-    function with commas.
-
-=head4 start_void($name, )
-
-    Starts a void function. $name is the name of the function being declared, and 
-    is a list of functions to be executed once called.
+    Starts a void function. $name is the name of the function being declared.
 
 =head4 start_task()
 
     Starts the main task. This function must always be present in RobotPerl.
 
-=head4 start_if($condition, )
+=head4 start_if($condition)
 
-    Starts an if statement. $condition is, of course, the condition, and  work the
-    same way as any other start_* function.
+    Starts an if statement. $condition is, of course, the condition.
 
 =head4 start_for(init => $init, end => $end, )
 
-    Starts a for loop. Takes three arguments: an start value ( usually 0 ), an end value,
-    and a list of functions to call when true.
+    Starts a for loop. Takes two arguments: a start value ( usually 0 ), and an end value,
 
 =head4 start_while($condition, )
 
-    Starts a while loop. Takes two arguments: the condition and a list of tasks to execute once true.
+    Starts a while loop. Takes the condition.
 
 =head4 end()
 
@@ -292,13 +270,11 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
 =head4 if_sound()
 
-    Starts an if statement with a predeclared condition (if sound is available),
-    and takes one argument which is a list of tasks to execute once true.
+    Starts an if statement with a predeclared condition (if sound is available).
 
 =head4 if_active()
 
     Does the same thing as if_sound, but checks for controller activity.
-    Still takes a list of tasks.
 
 =head4 pragma(in => "in2", name => $name, type => "Touch")
 
@@ -327,7 +303,7 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
 =head4 time_while($what_time_to_stop, )
 
-    Takes two arguments: a time limit which makes the condition false, and a list of tasks to execute while true.
+    Takes one argument: a time limit which makes the condition false.
 
 =head4 wait($duration)
 
@@ -335,7 +311,7 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
 =head4 cont(port => $port2, channel => $Ch2)
 
-    Donotes a given motor port to a transmitter channel.
+    Denotes a given motor port to a transmitter channel.
 
 =head4 call($function_name)
 

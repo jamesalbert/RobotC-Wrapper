@@ -1,26 +1,30 @@
-#pragma config(Sensor, in2, button, sensorTouch);
 bVexAutonomousMode = false;
 bMotorReflected[port3] = true;
+void drive() {
+motor[portport1] = 127;
+motor[portport2] = 127;
+}
+void turn_left() {
+motor[portport1] = -127;
+motor[portport2] = 127;
+}
+void turn_right() {
+motor[portport1] = 127;
+motor[portport2] = -127;
+}
+void halt() {
+motor[portport1] = 0;
+motor[portport2] = 0;
+}
 void cont() {
-int M_1 = motor[port1];
-motor[port2] = vexRT[Ch3];
-motor[port3] = vexRT[Ch2];
-motor[port4] = vexRT[Ch4];
-if ( M_1 > 0 ) {
-motor[port3] = M_1;
-motor[port2] = -(M_1);
-}
-if ( M_1 < 0 ) {
-motor[port2] = M_1;
-motor[port3] = -(M_1);
-}
+motor[port1] = vexRT[Ch3];
+motor[port2] = vexRT[Ch2];
 }
 task main() {
+drive();
 while (true) {
-cont();
-if ( SensorValue(button) == 1 ) {
-halt();
-wait_5();
+if ( true ) {
+turn_left();
 }
 }
 }

@@ -33,7 +33,7 @@ __DATA__
 
 <head>
 
-<link href="http://i.imgur.com/13eid.png" rel="icon" type="image/x-icon" />
+<link href="http://i.imgur.com/tlBJy.png" rel="icon" type="image/x-icon" />
 
 </head>
 
@@ -64,6 +64,12 @@ body { background-color:F2F2F2; }
 
 @@ contact.html.ep
 
+<head>
+
+<link href="http://i.imgur.com/tlBJy.png" rel="icon" type="image/x-icon" />
+
+</head>
+
 <a href="/" target="_blank">Home</a><br />
 
 <a href="/"><img src="http://i.imgur.com/13eid.png" title="Hosted by imgur.com" alt="" height="36" width="130" /></a>
@@ -79,6 +85,12 @@ body { background-color:F2F2F2; }
 <%= link_to 'mailto:casey.vega@gmail.com' => begin %>Email<% end %>
 
 @@ compare.html.ep
+
+<head>
+
+<link href="http://i.imgur.com/tlBJy.png" rel="icon" type="image/x-icon" />
+
+</head>
 
 <a href="/" target="_blank">Home</a> <a href="/contact" target="_blank">Report a bug</a><br />
 
@@ -101,69 +113,46 @@ function will be the difference between 20 lines of code and only 1.
 
 use strict;
 use warnings;
-use Robot::Perl::Lead;
+use Robot::Perl::Utils;
 
 my $SV = "SensorValue";
 
-my $r = Robot::Perl::Lead->new;
+my $r = Robot::Perl::Utils->new(
+    config => '/the/path/to/file.yaml'
+);
 
-$r->start_robot((
-    $r->pragma( in => "in2", name => "button", type => "Touch"),
-    $r->auto( "false" ),
-    $r->reflect( port => "port3", bool => "true" ),
-    $r->start_void( "cont", (
-        $r->var( type => 1, name => "MOTOR_1", value => "motor[port1]"),
-        $r->cont( port => "port2", channel => "Ch3"),
-        $r->cont( port => "port3", channel => "Ch2"),
-        $r->cont( port => "port4", channel => "Ch4"),
-        $r->start_if( "MOTOR_1 > 0", (
-            $r->motor( port => "port3", speed => "MOTOR_1"),
-            $r->motor( port => "port2", speed => "-(MOTOR_1)")
-        )),
-        $r->start_if( "MOTOR_1 < 0", (
-            $r->motor( port => "port2", speed => "MOTOR_1"),
-            $r->motor( port => "port3", speed => "-(MOTOR_1)")
-        ))
-    )),
-    $r->start_task((
-        $r->start_while( "true", (
-            $r->call( "cont" ),
-            $r->start_if( "$SV(button) == 1", (
-                $r->call( "halt" ),
-                $r->call( "wait_5" )
-            ))
-        ))
-    ))
-));
+$r->pragma( in => "in2", name => "button", type => "Touch" );
+
+$r->start_void( "Drive" );
+$r->motor( port => 2, speed => 127 );
+$r->motor( port => 3, speed => 127 );
+$r->end;
+
+$r->start_task;
+$r->start_while( "1" );
+$r->call( "Drive" );
+$r->end;
+$r->end;
+
 </textarea>
 
 <textarea rows="40" cols="75" readonly="readonly" disabled="disabled">
 #pragma config(Sensor, in2, button, sensorTouch);
-bVexAutonomousMode = false;
-bMotorReflected[port3] = true;
-void cont() {
-int MOTOR_1 = motor[port1];
-motor[port2] = vexRT[Ch3];
-motor[port3] = vexRT[Ch2];
-motor[port4] = vexRT[Ch4];
-if ( MOTOR_1 > 0 ) {
-motor[port3] = MOTOR_1;
-motor[port2] = -(MOTOR_1);
+
+bAutonomousMode = false;
+bMotorReflected[port2] = true;
+
+void Drive() {
+    motor[port2] = 127;
+    motor[port3] = 127;
 }
-if ( MOTOR_1 < 0 ) {
-motor[port2] = MOTOR_1;
-motor[port3] = -(MOTOR_1);
-}
-}
+
 task main() {
-while (true) {
-cont();
-if ( SensorValue(button) == 1 ) {
-halt();
-wait_5();
+    while( 1 ){
+        Drive();
+    }
 }
-}
-}
+
 </textarea>
 
 <br />
@@ -178,27 +167,25 @@ wait_5();
 
 use strict;
 use warnings;
-use Robot::Perl::Lead;
+use Robot::Perl::Utils;
 
 my $SV = "SensorValue";
 
-my $r = Robot::Perl::Lead->new;
+my $r = Robot::Perl::Utils->new(
+    config => '/the/path/to/file.yaml'
+);
 
-$r->start_robot((
-    $r->pragma( in => "in2", name => "button", type => "Touch"),
-    $r->auto( "false" ),
-    $r->reflect( port => "port3", bool => "true" ),
-    $r->basic_movements;
-    $r->start_task((
-        $r->start_while( "true", (
-            $r->call( "cont" ),
-            $r->start_if( "$SV(button) == 1", (
-                $r->call( "halt" ),
-                $r->call( "wait_5" )
-            ))
-        ))
-    ))
-));
+$r->basic_movements;
+
+$r->start_task;
+$r->call( "drive" );
+$r->start_while( 1 );
+$r->call( "cont" );
+$r->start_if( "$SV("button") == 1 );
+$r->call( "turn_left" );
+$r->end;
+$r->end;
+$r->end;
 
 </textarea>
 
@@ -223,9 +210,6 @@ void halt() {
 motor[port2] = 0;
 motor[port3] = 0;
 }
-void wait_five() {
-wait1Msec(5000);
-}
 void cont() {
 motor[port2] = vexRT[Ch3];
 motor[port3] = vexRT[Ch2];
@@ -234,17 +218,22 @@ task main() {
 while (true) {
 cont();
 if ( SensorValue(button) == 1 ) {
-halt();
-wait_5();
+turn_left();
 }
 }
 }
 
 </textarea>
 
-<p><code>RobotPerl is used mainly for its dynamic use and explicit function names.</code></p>
+<p><code>RobotPerl is used mainly for its dynamic use and implicit function names.</code></p>
 
 @@ docs.html.ep
+
+<head>
+
+<link href="http://i.imgur.com/tlBJy.png" rel="icon" type="image/x-icon" />
+
+</head>
 
 <a href="/" target="_blank">Home</a> <a href="/contact" target="_blank">Report a bug</a><br />
 
@@ -263,10 +252,6 @@ html { background-color:F2F2F2; }
 <link rev="made" href="mailto:kevin@archlinux.org" />
 </head>
 
-<body>
-
-
-
 <ul id="index">
   <li><a href="#NAME">NAME</a></li>
   <li><a href="#SYNOPSIS">SYNOPSIS</a>
@@ -281,12 +266,11 @@ html { background-color:F2F2F2; }
         <ul>
           <li>
             <ul>
-              <li><a href="#start_robot-tasks-">start_robot(@tasks)</a></li>
-              <li><a href="#start_void-name-tasks-">start_void($name, @tasks)</a></li>
-              <li><a href="#start_task-tasks-">start_task(@tasks)</a></li>
-              <li><a href="#start_if-condition-tasks-">start_if($condition, @tasks)</a></li>
-              <li><a href="#start_for-init-init-end-end-tasks-">start_for(init =&gt; $init, end =&gt; $end, @tasks)</a></li>
-              <li><a href="#start_while-condition-tasks-">start_while($condition, @tasks)</a></li>
+              <li><a href="#start_void-name-">start_void($name)</a></li>
+              <li><a href="#start_task-">start_task()</a></li>
+              <li><a href="#start_if-condition-">start_if($condition)</a></li>
+              <li><a href="#start_for-init-init-end-end-">start_for(init =&gt; $init, end =&gt; $end, )</a></li>
+              <li><a href="#start_while-condition-">start_while($condition, )</a></li>
               <li><a href="#end-">end()</a></li>
               <li><a href="#var-type-num-name-name-value-value-">var(type =&gt; $num, name =&gt; $name, value =&gt; $value)</a></li>
               <li><a href="#battery-name-variable_name-">battery(name =&gt; $variable_name)</a></li>
@@ -295,15 +279,15 @@ html { background-color:F2F2F2; }
               <li><a href="#sound-freq-frequency-dur-duration-">sound(freq =&gt; $frequency, dur =&gt; $duration)</a></li>
               <li><a href="#tone-tone-beep-">tone(tone =&gt; &quot;beep&quot;)</a></li>
               <li><a href="#sound_power-bool-true-">sound_power(bool =&gt; &quot;true&quot;)</a></li>
-              <li><a href="#if_sound-tasks-">if_sound(@tasks)</a></li>
-              <li><a href="#if_active-tasks-">if_active(@tasks)</a></li>
+              <li><a href="#if_sound-">if_sound()</a></li>
+              <li><a href="#if_active-">if_active()</a></li>
               <li><a href="#pragma-in-in2-name-name-type-Touch-">pragma(in =&gt; &quot;in2&quot;, name =&gt; $name, type =&gt; &quot;Touch&quot;)</a></li>
               <li><a href="#reflect-port-port2-bool-true-">reflect(port =&gt; $port2, bool =&gt; &quot;true&quot;)</a></li>
               <li><a href="#auto-bool-true-">auto(bool =&gt; &quot;true&quot;)</a></li>
               <li><a href="#motor-port-port2-speed-speed-">motor(port =&gt; $port2, speed =&gt; $speed)</a></li>
               <li><a href="#speed_up-port-port2-speed-increment-">speed_up(port =&gt; $port2, speed =&gt; $increment)</a></li>
               <li><a href="#clear_time-">clear_time()</a></li>
-              <li><a href="#time_while-what_time_to_stop-tasks-">time_while($what_time_to_stop, @tasks)</a></li>
+              <li><a href="#time_while-what_time_to_stop-">time_while($what_time_to_stop, )</a></li>
               <li><a href="#wait-duration-">wait($duration)</a></li>
               <li><a href="#cont-port-port2-channel-Ch2-">cont(port =&gt; $port2, channel =&gt; $Ch2)</a></li>
               <li><a href="#call-function_name-">call($function_name)</a></li>
@@ -326,7 +310,7 @@ html { background-color:F2F2F2; }
               <li><a href="#r_d-var-">r_d($var)</a></li>
             </ul>
           </li>
-          <li><a href="#AUTHOR">AUTHORS</a></li>
+          <li><a href="#AUTHORS">AUTHORS</a></li>
         </ul>
       </li>
     </ul>
@@ -342,31 +326,23 @@ html { background-color:F2F2F2; }
 <pre><code>    #!/usr/bin/perl -w
 
     use strict;
-    use Robot::Perl::Lead;
+    use Robot::Perl::Utils;
 
     my $SV = &quot;SensorValue&quot;;
 
-    my $r = Robot::Perl::Lead-&gt;new;
+    my $r = Robot::Perl::Utils-&gt;new(
+        config =&gt; &quot;/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml&quot;
+    );
 
-    $r-&gt;start_robot((
-        $r-&gt;pragma( in =&gt; &quot;in2&quot;, name =&gt; &quot;button&quot;, type =&gt; &quot;Touch&quot;),
-        $r-&gt;easy_start( &quot;port2&quot; ),
-        $r-&gt;basic_movements,
-        $r-&gt;start_void( &quot;turn_around&quot;, (
-            $r-&gt;motor( port =&gt; &quot;port2&quot;, speed =&gt; 127 ),
-            $r-&gt;motor( port =&gt; &quot;port3&quot;, speed =&gt; -127 )
-            $r-&gt;wait(1);
-        )),
-        $r-&gt;start_task((
-            $r-&gt;start_while( &quot;true&quot;, (
-                $r-&gt;call( &quot;cont&quot; ),
-                $r-&gt;start_if( &quot;$SV(button) == 1&quot;, (
-                        $r-&gt;call( &quot;halt&quot; ),
-                        $r-&gt;call( &quot;wait_5&quot; )
-                ))
-            ))
-        ))
-    ));</code></pre>
+    $r-&gt;basic_movements;
+    $r-&gt;start_task;
+    $r-&gt;call( &quot;drive&quot; );
+    $r-&gt;start_while( &quot;true&quot; );
+    $r-&gt;start_if( &quot;true&quot; );
+    $r-&gt;call( &quot;turn_left&quot; );
+    $r-&gt;end;
+    $r-&gt;end;
+    $r-&gt;end;</code></pre>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
@@ -381,39 +357,25 @@ html { background-color:F2F2F2; }
 
 <h1 id="LIST-OF-FUNCTIONS">LIST OF FUNCTIONS</h1>
 
-<h4 id="start_robot-tasks-">start_robot(@tasks)</h4>
+<h4 id="start_void-name-">start_void($name)</h4>
 
-<pre><code>    Should be called as the first function after Robot::Perl::Whatever-&gt;new. This function
-    prints everything.
+<pre><code>    Starts a void function. $name is the name of the function being declared.</code></pre>
 
-    $r-&gt;start_robot(( task_1, task_2, task_3 ));
-
-    Remember that all functions, loops, and statements in RobotPerl take an array as the last
-    parameter so don&#39;t forget to close the array and parameter parenthesis and separate each
-    function with commas.</code></pre>
-
-<h4 id="start_void-name-tasks-">start_void($name, @tasks)</h4>
-
-<pre><code>    Starts a void function. $name is the name of the function being declared, and @tasks
-    is a list of functions to be executed once called.</code></pre>
-
-<h4 id="start_task-tasks-">start_task(@tasks)</h4>
+<h4 id="start_task-">start_task()</h4>
 
 <pre><code>    Starts the main task. This function must always be present in RobotPerl.</code></pre>
 
-<h4 id="start_if-condition-tasks-">start_if($condition, @tasks)</h4>
+<h4 id="start_if-condition-">start_if($condition)</h4>
 
-<pre><code>    Starts an if statement. $condition is, of course, the condition, and @tasks work the
-    same way as any other start_* function.</code></pre>
+<pre><code>    Starts an if statement. $condition is, of course, the condition.</code></pre>
 
-<h4 id="start_for-init-init-end-end-tasks-">start_for(init =&gt; $init, end =&gt; $end, @tasks)</h4>
+<h4 id="start_for-init-init-end-end-">start_for(init =&gt; $init, end =&gt; $end, )</h4>
 
-<pre><code>    Starts a for loop. Takes three arguments: an start value ( usually 0 ), an end value,
-    and a list of functions to call when true.</code></pre>
+<pre><code>    Starts a for loop. Takes two arguments: a start value ( usually 0 ), and an end value,</code></pre>
 
-<h4 id="start_while-condition-tasks-">start_while($condition, @tasks)</h4>
+<h4 id="start_while-condition-">start_while($condition, )</h4>
 
-<pre><code>    Starts a while loop. Takes two arguments: the condition and a list of tasks to execute once true.</code></pre>
+<pre><code>    Starts a while loop. Takes the condition.</code></pre>
 
 <h4 id="end-">end()</h4>
 
@@ -449,15 +411,13 @@ html { background-color:F2F2F2; }
 
 <pre><code>    Turns sound on and off, true or false as a parameter.</code></pre>
 
-<h4 id="if_sound-tasks-">if_sound(@tasks)</h4>
+<h4 id="if_sound-">if_sound()</h4>
 
-<pre><code>    Starts an if statement with a predeclared condition (if sound is available),
-    and takes one argument which is a list of tasks to execute once true.</code></pre>
+<pre><code>    Starts an if statement with a predeclared condition (if sound is available).</code></pre>
 
-<h4 id="if_active-tasks-">if_active(@tasks)</h4>
+<h4 id="if_active-">if_active()</h4>
 
-<pre><code>    Does the same thing as if_sound, but checks for controller activity.
-    Still takes a list of tasks.</code></pre>
+<pre><code>    Does the same thing as if_sound, but checks for controller activity.</code></pre>
 
 <h4 id="pragma-in-in2-name-name-type-Touch-">pragma(in =&gt; &quot;in2&quot;, name =&gt; $name, type =&gt; &quot;Touch&quot;)</h4>
 
@@ -484,9 +444,9 @@ html { background-color:F2F2F2; }
 
 <pre><code>    Clears and starts a timer.</code></pre>
 
-<h4 id="time_while-what_time_to_stop-tasks-">time_while($what_time_to_stop, @tasks)</h4>
+<h4 id="time_while-what_time_to_stop-">time_while($what_time_to_stop, )</h4>
 
-<pre><code>    Takes two arguments: a time limit which makes the condition false, and a list of tasks to execute while true.</code></pre>
+<pre><code>    Takes one argument: a time limit which makes the condition false.</code></pre>
 
 <h4 id="wait-duration-">wait($duration)</h4>
 
@@ -494,7 +454,7 @@ html { background-color:F2F2F2; }
 
 <h4 id="cont-port-port2-channel-Ch2-">cont(port =&gt; $port2, channel =&gt; $Ch2)</h4>
 
-<pre><code>    Donotes a given motor port to a transmitter channel.</code></pre>
+<pre><code>    Denotes a given motor port to a transmitter channel.</code></pre>
 
 <h4 id="call-function_name-">call($function_name)</h4>
 
@@ -522,12 +482,14 @@ html { background-color:F2F2F2; }
 
 <pre><code>    Converts parameter from radians to degrees</code></pre>
 
-<h3 id="AUTHOR">AUTHORS</h3>
+<h3 id="AUTHORS">AUTHORS</h3>
 
-<pre><code>    James Albert james.albert72@gmail.com</code></pre>
+<pre><code>    James Albert &lt;james.albert72@gmail.com&gt;
+    Casey Vega   &lt;casey.vega@gmail.com&gt;</code></pre>
 
-<pre><code>    Casey Vega   casey.vega@gmail.com</code></pre>
 
 </body>
 
 </html>
+
+

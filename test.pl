@@ -1,24 +1,24 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
-use Robot::Perl::Lead;
+use warnings;
+use Robot::Perl::Utils;
 
 my $SV = "SensorValue";
 
-my $r = Robot::Perl::Lead->new;
+my $r = Robot::Perl::Utils->new(
+    config => '/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml'
+);
 
-$r->start_robot((
-    $r->pragma( in => "in2", name => "button", type => "Touch"),
-    $r->auto( "false" ),
-    $r->reflect( port => "port3", bool => "true" ),
-    $r->basic_movements,
-    $r->start_task((
-        $r->start_while( "true", (
-            $r->call( "cont" ),
-            $r->start_if( "$SV(button) == 1", (
-                $r->call( "halt" ),
-                $r->call( "wait_5" )
-            ))
-        ))
-    ))
-));
+$r->pragma( in => "in2", name => "button", type => "Touch" );
+
+$r->start_void( "Drive" );
+$r->motor( port => 2, speed => 127 );
+$r->motor( port => 3, speed => 127 );
+$r->end;
+
+$r->start_task;
+$r->start_while( "1" );
+$r->call( "Drive" );
+$r->end;
+$r->end;

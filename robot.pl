@@ -9,3 +9,11 @@ my $r = Robot::Perl::Utils->new(
 );
 
 $r->basic_movements;
+$r->start_task;
+$r->call( "drive" );
+$r->start_while( "true" );
+$r->start_if( "true" );
+$r->call( "turn_left" );
+$r->end;
+$r->end;
+$r->end;
