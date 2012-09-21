@@ -1,18 +1,18 @@
 ---
 motor_port:
-    right: port1
-    left: port2
-    2: port3
-    3: port4
-    4: port5
-    5: port6
+    right: 1
+    left: 2
+    2: 3
+    3: 4
+    4: 5
+    5: 6
 channel:
-    0: Ch1
-    1: Ch2
-    2: Ch3
-    3: Ch4
-    4: Ch5
-    5: Ch6
+    0: 1
+    1: 2
+    2: 3
+    3: 4
+    4: 5
+    5: 6
 speed:
     forward: 127
     reverse: -127
@@ -21,4 +21,4 @@ auto:
     state: false
 reflect:
     state: true
-    port: port3
+    port: 3

@@ -243,6 +243,7 @@ turn_left();
 html { background-color:F2F2F2; }
 </style>
 
+
 <?xml version="1.0" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -260,6 +261,7 @@ html { background-color:F2F2F2; }
     </ul>
   </li>
   <li><a href="#ROBOT::PERL">ROBOT::PERL</a></li>
+  <li><a href="#THE-USE-OF-YAML-FILES">THE USE OF YAML FILES</a></li>
   <li><a href="#LIST-OF-FUNCTIONS">LIST OF FUNCTIONS</a>
     <ul>
       <li>
@@ -353,7 +355,42 @@ html { background-color:F2F2F2; }
 
     use Robot::Perl;
 
-    my $r = Robot::Perl-&gt;new;</code></pre>
+    my $r = Robot::Perl-&gt;new(
+        config =&gt; &#39;/the/path/to/the/yaml.yaml&#39;
+    );</code></pre>
+
+<h1 id="THE-USE-OF-YAML-FILES">THE USE OF YAML FILES</h1>
+
+<pre><code>    When the constuctor is initiated, a config file (yaml file) must be defined as seen aboved. If the
+    path is not defined, an error will occur and compilation will fail. The yaml file should be formatted
+    as such:
+
+    ---
+    motor_port:
+        right:
+        left:
+        2:
+        3:
+        4:
+        5:
+    channel:
+        0:
+        1:
+        2:
+        3:
+        4:
+        5:
+    speed:
+        forward:
+        reverse:
+        stopped:
+    auto:
+        state:
+    reflect:
+        state:
+        port:
+
+    All values are inputted by the user (the only user input the program takes).</code></pre>
 
 <h1 id="LIST-OF-FUNCTIONS">LIST OF FUNCTIONS</h1>
 

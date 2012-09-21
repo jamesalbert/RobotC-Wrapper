@@ -125,7 +125,7 @@ sub pragma {
 
 sub reflect {
     my ( $self, %opt ) = @_;
-    return print "bMotorReflected[$opt{port}] = $opt{bool};\n";
+    return print "bMotorReflected[port$opt{port}] = $opt{bool};\n";
 };
 
 sub auto {
@@ -160,7 +160,7 @@ sub wait {
 
 sub cont {
     my ( $self, %opt ) = @_;
-    return print "motor[$opt{port}] = vexRT[$opt{channel}];\n";
+    return print "motor[port$opt{port}] = vexRT[Ch$opt{channel}];\n";
 };
 
 sub call {
@@ -210,7 +210,42 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
     use Robot::Perl;
 
-    my $r = Robot::Perl->new;
+    my $r = Robot::Perl->new(
+        config => '/the/path/to/the/yaml.yaml'
+    );
+
+=head1 THE USE OF YAML FILES
+
+    When the constuctor is initiated, a config file (yaml file) must be defined as seen aboved. If the
+    path is not defined, an error will occur and compilation will fail. The yaml file should be formatted
+    as such:
+
+    ---
+    motor_port:
+        right:
+        left:
+        2:
+        3:
+        4:
+        5:
+    channel:
+        0:
+        1:
+        2:
+        3:
+        4:
+        5:
+    speed:
+        forward:
+        reverse:
+        stopped:
+    auto:
+        state:
+    reflect:
+        state:
+        port:
+
+    All values are inputted by the user (the only user input the program takes).
 
 =head1 LIST OF FUNCTIONS
 
