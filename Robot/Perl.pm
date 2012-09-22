@@ -51,16 +51,25 @@ sub end {
 
 sub int_var {
     my ( $self, %opt ) = @_;
+    if ( $opt{name} !~ m/(.+)/ ) {
+        croak "Undefined variable name."
+    };
     return print "int $opt{name} = $opt{value};\n";
 }
 
 sub char_var {
     my ( $self, %opt ) = @_;
+    if ( $opt{name} !~ m/(.+)/ ) {
+        croak "Undefined variable name."
+    };
     return print "char $opt{name} = $opt{value};\n";
 }
 
 sub long_var {
     my ( $self, %opt ) = @_;
+    if ( $opt{name} !~ m/(.+)/ ) {
+        croak "Undefined variable name."
+    };
     return print "in $opt{name} = $opt{value};\n";
 }
 
@@ -145,6 +154,9 @@ sub pragma {
 
 sub reflect {
     my ( $self, %opt ) = @_;
+    if ( $opt{port} !~ m/\d/ ) {
+        croak "Not a defined port in reflect table [port]";
+    };
     return print "bMotorReflected[port$opt{port}] = $opt{bool};\n";
 };
 
@@ -152,6 +164,22 @@ sub auto {
     my ( $self, $bool ) = @_;
     return print "bVexAutonomousMode = $bool;\n";
 };
+
+sub inc_plus {
+    my ( $self, $var ) = @_;
+    if ( $var !~ m/(.+)/ ) {
+        croak "Invalid variable name";
+    }
+    print "$var++;\n";
+};
+
+sub inc_minus {
+    my ( $self, $var ) = @_;
+    if ( $var !~ m/(.+)/ ) {
+        croak "Invalid variable name";
+    }
+    print "$var--;\n";
+}
 
 sub motor {
     my ( $self, %opt ) = @_;

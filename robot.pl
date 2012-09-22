@@ -35,6 +35,10 @@ sub KLAW_KONT {
 
     $r->start_void( "klaw_kont");
         $r->int_var(
+            name  => "POS",
+            value => 0
+        );
+        $r->int_var(
             name  => "C_5",
             value => "vexRT[Ch5]"
         );
@@ -43,26 +47,61 @@ sub KLAW_KONT {
             value => "vexRT[Ch6]"
         );
         $r->start_if( "C_5 == 127");
-            $r->motor(
-                port  => 3,
-                speed => 40
-            );
-            $r->motor(
-                port  => 4,
-                speed => 40
-            );
-            $r->wait( 1 );
+            $r->start_if( "POS <= 1" );
+                $r->inc_plus( "POS" );
+                $r->motor(
+                    port  => 3,
+                    speed => 40
+                );
+                $r->motor(
+                    port  => 4,
+                    speed => 40
+                );
+                $r->wait( 1 );
+            $r->end;
         $r->end;
         $r->start_else_if( "C_5 == -127" );
+            $r->start_if( "POS >= 1" );
+                $r->inc_minus( "POS" );
+                $r->motor(
+                    port  => 3,
+                    speed => -40
+                );
+                $r->motor(
+                    port  => 4,
+                    speed => -40
+                );
+                $r->wait( 1 );
+            $r->end;
+        $r->end;
+        $r->start_else_if( "C_6 == 127" );
+            $r->start_if( "POS == 0" );
+                $r->inc_plus( "POS" );
+                $r->inc_plus( "POS" );
+                $r->motor(
+                    port  => 3,
+                    speed => 40
+                );
+                $r->motor(
+                    port  => 4,
+                    speed => 40
+                );
+                $r->wait( 2 );
+            $r->end;
+        $r->end;
+        $r->start_else_if( "C_6 == -127" );
+            $r->start_if( "POS == 2" );
+            $r->inc_minus( "POS" );
+            $r->inc_minus( "POS" );
             $r->motor(
-            port  => 3,
-            speed => -40
+                port  => 3,
+                speed => -40
             );
             $r->motor(
                 port  => 4,
                 speed => -40
             );
-            $r->wait( 1 );
+            $r->wait( 2 );
         $r->end;
     $r->end;
     return $r;
