@@ -1,7 +1,7 @@
 #pragma config(Sensor, in1, "button", sensorTouch);
 #pragma config(Sensor, in2, "eyes", sensorSONAR);
 bVexAutonomousMode = false;
-bMotorReflected[port3] = true;
+bMotorReflected[port2] = true;
 void drive() {
 motor[port1] = 127;
 motor[port2] = 127;
@@ -28,18 +28,18 @@ int C_6 = vexRT[Ch6];
 if ( C_5 == 127 ) {
 motor[port3] = 40;
 motor[port4] = 40;
+wait1Msec(1000);
 }
 else if ( C_5 == -127 ) {
 motor[port3] = -40;
 motor[port4] = -40;
+wait1Msec(1000);
 }
 }
 task main() {
-int SV = SensorValue(button);
-drive();
-while (true) {
-if ( SV == 1 ) {
-turn_left();
+while (1) {
+cont();
+klaw_kont();
 }
 }
 }
