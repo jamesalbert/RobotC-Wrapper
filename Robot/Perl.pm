@@ -25,7 +25,7 @@ sub start_task {
 
 sub start_if {
     my ( $self, $cond ) = @_;
-    if ( $cond !~ m/((.+) > (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)true|(.*)false)/ ) {
+    if ( $cond !~ m/((.+) > (.+)|(.+) >= (.+)|(.+) <= (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)|true|!(.*)|false)/ ) {
         croak "Incorrect condition syntax.";
     };
     return print "if ( $cond ) {\n";
@@ -33,7 +33,7 @@ sub start_if {
 
 sub start_else_if {
     my ( $self, $cond ) = @_;
-    if ( $cond !~ m/((.+) > (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)true|(.*)false)/ ) {
+    if ( $cond !~ m/((.+) > (.+)|(.+) >= (.+)|(.+) <= (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)|true|!(.*)|false)/ ) {
         croak "Incorrect condition syntax.";
     };
     return print "else if ( $cond ) {\n";
@@ -122,7 +122,7 @@ sub sound_power {
 
 sub start_while {
     my ( $self, $cond ) = @_;
-    if ( $cond !~ m/((.+) > (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)true|(.*)false)/ ) {
+    if ( $cond !~ m/((.+) > (.+)|(.+) >= (.+)|(.+) <= (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)|true|!(.*)|false)/ ) {
         croak "Incorrect condition syntax.";
     };
     return print "while ($cond) {\n";
