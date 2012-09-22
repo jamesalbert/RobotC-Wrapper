@@ -2,8 +2,10 @@ package Robot::Perl;
 
 use strict;
 use warnings;
-use Switch;
+use Carp qw/croak/;
 use YAML qw/LoadFile/;
+
+our $VERSION = 1.00;
 
 sub new {
     my ( $class, %opt ) = @_;
@@ -23,8 +25,19 @@ sub start_task {
 
 sub start_if {
     my ( $self, $cond ) = @_;
+    if ( $cond !~ m/((.+) > (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)true|(.*)false)/ ) {
+        croak "Incorrect condition syntax.";
+    };
     return print "if ( $cond ) {\n";
 };
+
+sub start_else_if {
+    my ( $self, $cond ) = @_;
+    if ( $cond !~ m/((.+) > (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)true|(.*)false)/ ) {
+        croak "Incorrect condition syntax.";
+    };
+    return print "else if ( $cond ) {\n";
+}
 
 sub start_for {
     my ( $self, %opt ) = @_;
@@ -36,15 +49,19 @@ sub end {
     return print "}\n";
 };
 
-sub var {
+sub int_var {
     my ( $self, %opt ) = @_;
-    my $t;
-    switch ($opt{type}) {
-        case 1 {$t = "int"}
-        case 2 {$t = "char"}
-        case 3 {$t = "long"}
-    };
-    return print "$t $opt{name} = $opt{value};\n";
+    return print "int $opt{name} = $opt{value};\n";
+}
+
+sub char_var {
+    my ( $self, %opt ) = @_;
+    return print "char $opt{name} = $opt{value};\n";
+}
+
+sub long_var {
+    my ( $self, %opt ) = @_;
+    return print "in $opt{name} = $opt{value};\n";
 }
 
 sub battery {
@@ -94,9 +111,7 @@ sub sound {
 
 sub tone {
     my ( $self, %opt ) = @_;
-    if ( $opt{tone} =! m/(buzz|beep|click)/ ) {
-        die "Must be 'buzz', 'beep', or 'click'";
-    }
+    die "Must be 'buzz', 'beep', or 'click'" if $opt{tone} =! m/(buzz|beep|click)/;
     return print "PlaySound($opt{tone});\n";
 }
 
@@ -107,6 +122,9 @@ sub sound_power {
 
 sub start_while {
     my ( $self, $cond ) = @_;
+    if ( $cond !~ m/((.+) > (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)true|(.*)false)/ ) {
+        croak "Incorrect condition syntax.";
+    };
     return print "while ($cond) {\n";
 }
 
@@ -122,12 +140,12 @@ sub if_active {
 
 sub pragma {
     my ( $self, %opt ) = @_;
-    return print "#pragma config(Sensor, $opt{in}, $opt{name}, sensor$opt{type});\n";
+    return print "#pragma config(Sensor, $opt{in}, ", '"', $opt{name}, '"', ", sensor$opt{type});\n";
 };
 
 sub reflect {
     my ( $self, %opt ) = @_;
-    return print "bMotorReflected[$opt{port}] = $opt{bool};\n";
+    return print "bMotorReflected[port$opt{port}] = $opt{bool};\n";
 };
 
 sub auto {
@@ -162,7 +180,7 @@ sub wait {
 
 sub cont {
     my ( $self, %opt ) = @_;
-    return print "motor[port$opt{port}] = vexRT[$opt{channel}];\n";
+    return print "motor[port$opt{port}] = vexRT[Ch$opt{channel}];\n";
 };
 
 sub call {

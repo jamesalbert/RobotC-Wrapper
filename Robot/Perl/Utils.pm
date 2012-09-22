@@ -5,6 +5,8 @@ use warnings;
 use YAML qw/LoadFile/;
 use Carp qw/croak/;
 
+our $VERSION = 1.00;
+
 use parent qw/Robot::Perl/;
 
 sub new {
@@ -17,14 +19,6 @@ sub new {
     my $self = $class->SUPER::new;
     $self->{conf} = LoadFile( $opt{config} );
 
-    $self->pragma(
-        in   => $self->{conf}->{sensor}->{port}->{1},
-        name => $self->{conf}->{sensor}->{name}->{button},
-        type => $self->{conf}->{sensor}->{tupe}->{touch}
-    )
-    if (!$self->pragma->{in} | !$self->pragma->{name} | !$self->pragma->{type} ) {
-        next;
-    }
     $self->auto( $self->{conf}->{auto}->{state} );
     $self->reflect(
         port => $self->{conf}->{reflect}->{port},
