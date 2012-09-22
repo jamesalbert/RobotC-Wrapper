@@ -21,11 +21,13 @@ sub SETUP {
         name => "eyes",
         type => "SONAR"
     );
+    return $pre;
 };
 
-sub BASIC_SETUP {
+sub BASICS {
     my $r = shift;
     $r->basic_movements;
+    return $r;
 };
 
 sub KLAW_KONT {
@@ -49,6 +51,7 @@ sub KLAW_KONT {
                 port  => 4,
                 speed => 40
             );
+            $r->wait( 1 );
         $r->end;
         $r->start_else_if( "C_5 == -127" );
             $r->motor(
@@ -59,25 +62,23 @@ sub KLAW_KONT {
                 port  => 4,
                 speed => -40
             );
+            $r->wait( 1 );
         $r->end;
     $r->end;
+    return $r;
 };
 
 sub MAIN_TASK {
     my $r = shift;
 
     $r->start_task;
-        $r->int_var(
-        name => "SV",
-        value => "SensorValue(button)"
-        );
-        $r->call( "drive" );
-        $r->start_while( "true" );
-            $r->start_if( "SV == 1" );
-                $r->call( "turn_left" );
+        $r->start_while( 1 );
+            $r->call( "cont" );
+            $r->call( "klaw_kont" );
             $r->end;
         $r->end;
     $r->end;
+    return $r;
 };
 
 SETUP( $pre );
@@ -86,6 +87,6 @@ my $r = Robot::Perl::Utils->new(
     config => "/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml"
 );
 
-BASIC_SETUP( $r );
+BASICS( $r );
 KLAW_KONT( $r );
 MAIN_TASK( $r );

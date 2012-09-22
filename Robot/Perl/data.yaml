@@ -21,4 +21,4 @@ auto:
     state: false
 reflect:
     state: true
-    port: 3
+    port: 2
