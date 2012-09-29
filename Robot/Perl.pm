@@ -1,81 +1,135 @@
-package Robot::Perl;
+package RobotC::Wrapper;
 
 use strict;
 use warnings;
 use Carp qw/croak/;
 use YAML qw/LoadFile/;
 
-our $VERSION = 1.00;
+our $VERSION = 0.01;
 
-class new:
-    def __init__(self, class):
-	
-    def start_void(self, name):
-        return print "void %s() {\n" % name
+sub new {
+    my ( $class, %opt ) = @_;
+    my $self = {};
+    return bless $self, $class;
+};
 
-    def start_task(self):
-        return print "task main() {\n"
+sub start_void {
+    my ( $self, $name ) = @_;
+    return print "void $name() {\n";
+};
 
-    sub start_if(self, cond):
-        return print "if ( %s ) {\n" % cond
+sub start_task {
+    my $self = shift;
+    return print "task main() {\n";
+};
 
-    def start_else_if(self, cond):
-        return print "else if ( %s ) {\n" % cond
+sub start_if {
+    my ( $self, $cond ) = @_;
+    if ( $cond !~ m/((.+) > (.+)|(.+) >= (.+)|(.+) <= (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)|true|!(.*)|false)/ ) {
+        croak "Incorrect condition syntax.";
+    };
+    return print "if ( $cond ) {\n";
+};
 
-    def start_for(self, init, end):
-        return print "for (int i = %d; i < %d; i++) {\n" % init, end
+sub start_else_if {
+    my ( $self, $cond ) = @_;
+    if ( $cond !~ m/((.+) > (.+)|(.+) >= (.+)|(.+) <= (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)|true|!(.*)|false)/ ) {
+        croak "Incorrect condition syntax.";
+    };
+    return print "else if ( $cond ) {\n";
+}
 
-    def end(self):
-        return print "}\n"
+sub start_for {
+    my ( $self, %opt ) = @_;
+    return print "for (int i = $opt{init}; i < $opt{end}; i++) {\n";
+}
 
-    def int_var(self, name, value):
-        return print "int %s = %d;\n" % name, value
+sub end {
+    my ( $self, %opt ) = @_;
+    return print "}\n";
+};
 
-    def char_var(self, name, value):
-        return print "char %s = %d;\n" % name, value
+sub int_var {
+    my ( $self, %opt ) = @_;
+    if ( $opt{name} !~ m/(.+)/ ) {
+        croak "Undefined variable name."
+    };
+    return print "int $opt{name} = $opt{value};\n";
+}
 
-    def long_var(self, name, value):
-        return print "in %s = %d;\n" % name, value
+sub char_var {
+    my ( $self, %opt ) = @_;
+    if ( $opt{name} !~ m/(.+)/ ) {
+        croak "Undefined variable name."
+    };
+    return print "char $opt{name} = $opt{value};\n";
+}
 
-    def battery(self, name):
-        return print "int %s = nImmediateBatteryLevel;\n" % name
+sub long_var {
+    my ( $self, %opt ) = @_;
+    if ( $opt{name} !~ m/(.+)/ ) {
+        croak "Undefined variable name."
+    };
+    return print "in $opt{name} = $opt{value};\n";
+}
 
-    def cos(self, radians):
-        return print "cos(%d);\n" % radians
+sub battery {
+    my ( $self, %opt ) = @_;
+    return print "int $opt{name} = nImmediateBatteryLevel;\n";
+}
 
-    def sin(self, radians):
-        return print "sin(%d);\n" % radians
+sub cos {
+    my ( $self, %opt ) = @_;
+    return print "cos($opt{radians});\n";
+}
 
-    def tan(self, radians):
-        return print "tan(%d);\n" % radians
+sub sin {
+    my ( $self, %opt ) = @_;
+    return print "sin($opt{radians});\n";
+}
 
-    def d_r(self, degrees):
-        return print "degreesToRadians(%d);\n" % degrees
+sub tan {
+    my ( $self, %opt ) = @_;
+    return print "tan($opt{radians});\n";
+}
 
-    def r_d(self, radians):
-        return print "radiansToDegrees(%d);\n" % radians
+sub d_r {
+    my ( $self, %opt ) = @_;
+    return print "degreesToRadians($opt{degrees});\n";
+}
 
-    def kill(self, task):
-        return print "StopTask(%s);\n" % task
+sub r_d {
+    my ( $self, %opt ) = @_;
+    return print "radiansToDegrees($opt{radians});\n";
+}
 
-    def mute(self):
-        return print "ClearSounds();\n"
+sub kill {
+    my ( $self, %opt ) = @_;
+    return print "StopTask($opt{task});\n";
+}
 
-    def sound(self, freq, dur):
-        return print "PlayImmediateTone(%d, %d);\n" % freq, dur
+sub mute {
+    my $self = shift;
+    return print "ClearSounds();\n";
+}
 
-    def tone {
+sub sound {
+    my ( $self, %opt ) = @_;
+    return print "PlayImmediateTone($opt{freq},$opt{dur});\n";
+}
+
+sub tone {
     my ( $self, %opt ) = @_;
     die "Must be 'buzz', 'beep', or 'click'" if $opt{tone} =! m/(buzz|beep|click)/;
     return print "PlaySound($opt{tone});\n";
 }
 
-def sound_power {
+sub sound_power {
     my ( $self, %opt ) = @_;
     return print "bPlaySounds = $opt{bool};\n";
 }
 
-def start_while {
+sub start_while {
     my ( $self, $cond ) = @_;
     if ( $cond !~ m/((.+) > (.+)|(.+) >= (.+)|(.+) <= (.+)|(.+) < (.+)|(.+) == (.+)|(.+) != (.+)|(.*)|true|!(.*)|false)/ ) {
         croak "Incorrect condition syntax.";
@@ -83,17 +137,17 @@ def start_while {
     return print "while ($cond) {\n";
 }
 
-def if_sound {
+sub if_sound {
     my ( $self ) = @_;
     return print "if(bHasSoundDriver){\n";
 }
 
-def if_active {
+sub if_active {
     my ( $self ) = @_;
     return print "if(bVEXNETActive = true){\n";
 }
 
-def pragma {
+sub pragma {
     my ( $self, %opt ) = @_;
     return print "#pragma config(Sensor, $opt{in}, ", '"', $opt{name}, '"', ", sensor$opt{type});\n";
 };
