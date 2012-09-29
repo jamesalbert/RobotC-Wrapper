@@ -23,13 +23,13 @@ class new:
          print "}"
 
     def int_var(self, name, value):
-         print "int %s = %d;" % (name, value)
+         print "int %s = %r;" % (name, value)
 
     def char_var(self, name, value):
-         print "char %s = %d;" % (name, value)
+         print "char %s = %r;" % (name, value)
 
     def long_var(self, name, value):
-         print "in %s = %d;" % (name, value)
+         print "in %s = %r;" % (name, value)
 
     def battery(self, name):
          print "int %s = nImmediateBatteryLevel;" % name

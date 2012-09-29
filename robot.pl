@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -123,7 +123,7 @@ sub MAIN_TASK {
 SETUP( $pre );
 
 my $r = Robot::Perl::Utils->new(
-    config => "/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml"
+    config => "/home/jbert/dev/data.yaml"
 );
 
 BASICS( $r );

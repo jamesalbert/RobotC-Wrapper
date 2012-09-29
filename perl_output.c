@@ -23,17 +23,41 @@ motor[port1] = vexRT[Ch3];
 motor[port2] = vexRT[Ch2];
 }
 void klaw_kont() {
+int POS = 0;
 int C_5 = vexRT[Ch5];
 int C_6 = vexRT[Ch6];
 if ( C_5 == 127 ) {
+if ( POS <= 1 ) {
+POS++;
 motor[port3] = 40;
 motor[port4] = 40;
 wait1Msec(1000);
 }
+}
 else if ( C_5 == -127 ) {
+if ( POS >= 1 ) {
+POS--;
 motor[port3] = -40;
 motor[port4] = -40;
 wait1Msec(1000);
+}
+}
+else if ( C_6 == 127 ) {
+if ( POS == 0 ) {
+POS++;
+POS++;
+motor[port3] = 40;
+motor[port4] = 40;
+wait1Msec(2000);
+}
+}
+else if ( C_6 == -127 ) {
+if ( POS == 2 ) {
+POS--;
+POS--;
+motor[port3] = -40;
+motor[port4] = -40;
+wait1Msec(2000);
 }
 }
 task main() {
