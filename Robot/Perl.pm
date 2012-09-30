@@ -1,4 +1,4 @@
-package RobotC::Wrapper;
+package Robot::Perl;
 
 use strict;
 use warnings;
@@ -120,7 +120,9 @@ sub sound {
 
 sub tone {
     my ( $self, %opt ) = @_;
-    die "Must be 'buzz', 'beep', or 'click'" if $opt{tone} =! m/(buzz|beep|click)/;
+    if ( $opt{tone} =! m/(buzz|beep|click)/ ) {
+        croak "Must be 'buzz', 'beep', or 'click'";
+    }
     return print "PlaySound($opt{tone});\n";
 }
 
@@ -149,7 +151,7 @@ sub if_active {
 
 sub pragma {
     my ( $self, %opt ) = @_;
-    return print "#pragma config(Sensor, $opt{in}, ", '"', $opt{name}, '"', ", sensor$opt{type});\n";
+    return print "#pragma config(Sensor, $opt{in}, \"$opt{name}\", sensor$opt{type});\n";
 };
 
 sub reflect {
