@@ -13,9 +13,10 @@ sub new {
     return bless $self, $class;
 };
 
-sub compile {
-    my ( $self, $filename ) = @_;
-    system("nbc $filename.nxc -sm+ -d -S=usb");
+sub write_and_compile {
+    my ( $self, $filename, $output ) = @_;
+    system("perl $filename > $output");
+    system("nbc $output.nxc -sm+ -d -S=usb");
 }
 
 sub start_void {
