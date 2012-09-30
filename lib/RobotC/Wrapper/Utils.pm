@@ -1,4 +1,4 @@
-package Robot::Perl::Utils;
+package RobotC::Wrapper::Utils;
 
 use strict;
 use warnings;
@@ -7,7 +7,7 @@ use Carp qw/croak/;
 
 our $VERSION = 1.00;
 
-use parent qw/Robot::Perl/;
+use parent qw/RobotC::Wrapper/;
 
 sub new {
     my ( $class, %opt ) = @_;

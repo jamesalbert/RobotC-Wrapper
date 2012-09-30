@@ -1,4 +1,4 @@
-package Robot::Perl;
+package RobotC::Wrapper;
 
 use strict;
 use warnings;
@@ -226,14 +226,14 @@ __END__
 
 =head1 NAME
 
-RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
+RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
 
 =head1 SYNOPSIS
 
     #!/usr/bin/perl -w
 
     use strict;
-    use Robot::Perl::Utils;
+    use RobotC::Wrapper::Utils;
 
     my $SV = "SensorValue";
 
@@ -260,7 +260,7 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
     use Robot::Perl;
 
-    my $r = Robot::Perl->new(
+    my $r = RobotC::Wrapper->new(
         config => '/the/path/to/the/yaml.yaml'
     );
 
@@ -305,7 +305,7 @@ RobotPerl - An easy to read, fully functional RobotC for Vex wrapper.
 
 =head4 start_task()
 
-    Starts the main task. This function must always be present in RobotPerl.
+    Starts the main task. This function must always be present while using RobotC-Wrapper.
 
 =head4 start_if($condition)
 
