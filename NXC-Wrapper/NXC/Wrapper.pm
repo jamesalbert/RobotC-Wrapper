@@ -234,72 +234,111 @@ NXP - An easy to read, fully functional NXC wrapper for NXT Mindstorm.
 
 =head1 SYNOPSIS
 
-    #!/usr/bin/perl -w
+    #!/usr/bin/env perl
 
     use strict;
-    use Robot::Perl::Utils;
+    use warnings;
+    use NXC::Wrapper;
 
-    my $SV = "SensorValue";
+    sub FORWARD {
+        my $r = shift;
 
-    my $r = Robot::Perl::Utils->new(
-        config => "/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml"
-    );
+        $r->start_void("forward");
+            $r->forward(
+                motors => "AC",
+                speed  => 50
+            );
+        $r->end;
+    };
 
-    $r->basic_movements;
-    $r->start_task;
-    $r->call( "drive" );
-    $r->start_while( "true" );
-    $r->start_if( "true" );
-    $r->call( "turn_left" );
-    $r->end;
-    $r->end;
-    $r->end;
+    sub REVERSE {
+        my $r = shift;
+
+        $r->start_void("reverse");
+            $r->reverse(
+                motors => "AC",
+                speed  => 50
+            );
+        $r->end;
+    };
+
+    sub TURN_LEFT {
+        my ( $r, $dur ) = @_;
+
+        $r->start_void("turn_left");
+            $r->forward(
+                motors => "A",
+                speed  => 50
+            );
+            $r->reverse(
+                motors => "C",
+                speed  => 50
+            );
+            $r->wait($dur);
+        $r->end;
+    };
+
+    sub TURN_RIGHT {
+        my ( $r, $dur ) = @_;
+
+        $r->start_void("turn_right");
+            $r->reverse(
+                motors => "A",
+                speed  => 50
+            );
+            $r->forward(
+                motors => "C",
+                speed  => 50
+            );
+            $r->wait($dur);
+        $r->end;
+    };
+
+    sub COLOR_SORT {
+        my $r = shift;
+
+        $r->start_void( "color_sort" );
+            $r->start_if( "SENSOR_1 == 1" );
+                $r->call( "reverse");
+                $r->until( "SENSOR_1 == 0" );
+                $r->call( "turn_left" );
+                $r->call( "forward" );
+            $r->end;
+        $r->end;
+    };
+
+    sub MAIN_TASK {
+        my $r = shift;
+
+        $r->start_task;
+            $r->call("forward");
+            $r->touch_setup(1);
+            $r->start_while( 1 );
+                $r->call( "color_sort" );
+                $r->end;
+            $r->end;
+        $r->end;
+        return $r;
+    };
+
+    my $r = NXC::Wrapper->new;
+    FORWARD( $r );
+    REVERSE( $r );
+    TURN_LEFT( $r, 2 );
+    TURN_RIGHT( $r, 2 );
+    COLOR_SORT( $r );
+    MAIN_TASK( $r );
 
 =head2 DESCRIPTION
 
-=head1 ROBOT::PERL
+=head1 NXC::Wrapper
 
-    The Robot::Perl base library has a series of functions that you can call which will spit out RobotC.
+    The NXC::Wrapper base library has a series of functions that you can call which will spit out NXC.
     Start by initiating it.
 
-    use Robot::Perl;
+    use NXC::Wrapper;
 
-    my $r = Robot::Perl->new(
-        config => '/the/path/to/the/yaml.yaml'
-    );
-
-=head1 THE USE OF YAML FILES
-
-    When the constuctor is initiated, a config file (yaml file) must be defined as seen aboved. If the
-    path is not defined, an error will occur and compilation will fail. The yaml file should be formatted
-    as such:
-
-    ---
-    motor_port:
-        right:
-        left:
-        2:
-        3:
-        4:
-        5:
-    channel:
-        0:
-        1:
-        2:
-        3:
-        4:
-        5:
-    speed:
-        forward:
-        reverse:
-        stopped:
-    auto:
-        state:
-    reflect:
-        state:
-        port:
-
-    All values are inputted by the user (the only user input the program takes).
+    my $r = NXC::Wrapper->new;
 
 =head1 LIST OF FUNCTIONS
 
@@ -309,7 +348,7 @@ NXP - An easy to read, fully functional NXC wrapper for NXT Mindstorm.
 
 =head4 start_task()
 
-    Starts the main task. This function must always be present in RobotPerl.
+    Starts the main task. This function must always be present in the script.
 
 =head4 start_if($condition)
 
@@ -319,7 +358,7 @@ NXP - An easy to read, fully functional NXC wrapper for NXT Mindstorm.
 
     Starts a for loop. Takes two arguments: a start value ( usually 0 ), and an end value,
 
-=head4 start_while($condition, )
+=head4 start_while($condition)
 
     Starts a while loop. Takes the condition.
 
@@ -327,106 +366,37 @@ NXP - An easy to read, fully functional NXC wrapper for NXT Mindstorm.
 
     Prints a brace "}" and starts a newline.
 
-=head4 var(type => $num, name => $name, value => $value)
+=head4 int_var(name => $name, value => $value)
 
-    Declares a new variable, takes three arguments: a number symbolizing data
-    type ( 1-3; 1 => int, 2 => char, 3 => long ), name, and value.
+    defines a int variable
 
-=head4 battery(name => $variable_name)
+=head4 char_var(name => $name, value => $value)
 
-    Declares a variable containing the current battery level, takes the variable
-    name as the only argument.
+    defines a char variable
 
-=head4 kill(task => $any_function)
+=head4 long_var(name => $name, value => $value)
 
-    Kills the function specified as a parameter.
+    defines a long variable
 
-=head4 mute()
+=head4 tone(frequency => $frequency, duration => $duration, volume => $vol, loop => "true")
 
-    Turns off all tones and sounds.
+    sets up a tone.
 
-=head4 sound(freq => $frequency, dur => $duration)
+=head4 forward(motors => "AC", speed => $speed)
 
-    Plays a tone, takes two arguments: frequency, and duration.
+    drives the AC motors forward at a speed of $speed.
 
-=head4 tone(tone => "beep")
+=head4 reverse(motors => "AC", speed => $speed)
 
-    Plays tone, takes one parameter: must be "buzz", "beep", or "click".
-
-=head4 sound_power(bool => "true")
-
-    Turns sound on and off, true or false as a parameter.
-
-=head4 if_sound()
-
-    Starts an if statement with a predeclared condition (if sound is available).
-
-=head4 if_active()
-
-    Does the same thing as if_sound, but checks for controller activity.
-
-=head4 pragma(in => "in2", name => $name, type => "Touch")
-
-    Sets up sensors. Should be the first thing called after start_robot.
-    Takes three parameters: in port, name, and sensor type ("Touch, SONAR, etc").
-
-=head4 reflect(port => $port2, bool => "true")
-
-    Reflects a designated port, takes two parameters: port name ( "port2", "port3", etc ), and boolean ( most likely true ).
-
-=head4 auto(bool => "true")
-
-    Toggles autonomous mode depending on the boolean parameter.
-
-=head4 motor(port => $port2, speed => $speed)
-
-    Sets motor value, takes two parameters: port name and speed ( -127 - 127 ).
-
-=head4 speed_up(port => $port2, speed => $increment)
-
-    Speeds up to motors, takes two arguments: port name, and a number to be added to the current speed.
-
-=head4 clear_time()
-
-    Clears and starts a timer.
-
-=head4 time_while($what_time_to_stop, )
-
-    Takes one argument: a time limit which makes the condition false.
+    drives the AC motors in reverse at a speed of $speed.
 
 =head4 wait($duration)
 
     Pauses the robot for the given amount of seconds. ( yes, SECONDS! )
 
-=head4 cont(port => $port2, channel => $Ch2)
-
-    Denotes a given motor port to a transmitter channel.
-
 =head4 call($function_name)
 
     Calls a given function.
-
-=head1 THESE FUNCTIONS SHOULD BE USED AS VALUES
-
-=head4 cos($var)
-
-    Equal to the cosine of $var.
-
-=head4 sin($var)
-
-    Equal to the sin of var.
-
-=head4 tan($var)
-
-    Equal to the tangent of $var.
-
-=head4 d_r($var)
-
-    Converts parameter from degrees to radians
-
-=head4 r_d($var)
-
-    Converts parameter from radians to degrees
 
 =head3 AUTHORS
 
