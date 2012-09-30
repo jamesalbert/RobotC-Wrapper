@@ -3,59 +3,12 @@
 use strict;
 use warnings;
 use NXC::Wrapper;
+use NXC::Wrapper::Utils;
 
-sub FORWARD {
+sub BASIC {
     my $r = shift;
 
-    $r->start_void("forward");
-        $r->forward(
-            motors => "AC",
-            speed  => 50
-        );
-    $r->end;
-};
-
-sub REVERSE {
-    my $r = shift;
-
-    $r->start_void("reverse");
-        $r->reverse(
-            motors => "AC",
-            speed  => 50
-        );
-    $r->end;
-};
-
-sub TURN_LEFT {
-    my ( $r, $dur ) = @_;
-
-    $r->start_void("turn_left");
-        $r->forward(
-            motors => "A",
-            speed  => 50
-        );
-        $r->reverse(
-            motors => "C",
-            speed  => 50
-        );
-        $r->wait($dur);
-    $r->end;
-};
-
-sub TURN_RIGHT {
-    my ( $r, $dur ) = @_;
-
-    $r->start_void("turn_right");
-        $r->reverse(
-            motors => "A",
-            speed  => 50
-        );
-        $r->forward(
-            motors => "C",
-            speed  => 50
-        );
-        $r->wait($dur);
-    $r->end;
+    $r->BASIC_MOVEMENTS( 2 );
 };
 
 sub COLOR_SORT {
@@ -85,10 +38,11 @@ sub MAIN_TASK {
     return $r;
 };
 
-my $r = NXC::Wrapper->new;
-FORWARD( $r );
-REVERSE( $r );
-TURN_LEFT( $r, 2 );
-TURN_RIGHT( $r, 2 );
-COLOR_SORT( $r );
-MAIN_TASK( $r );
+my $robot = NXC::Wrapper->new;
+my $utils = NXC::Wrapper::Utils->new(
+    config => "/home/jbert/dev/PYTHON/RobotPerl/NXC-Wrapper/data.yaml"
+);
+
+BASIC( $utils );
+COLOR_SORT( $robot );
+MAIN_TASK( $robot );
