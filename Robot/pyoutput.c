@@ -1,9 +1,13 @@
-#pragma config(Sensor, in2, button, sensorTouch);
+#pragma config(Sensor, in2, "button", sensorTouch);
 bMotorReflected[port2] = true;
 bVexAutonomousMode = false;
-void drive() {
+void forward() {
 motor[port2] = 127;
 motor[port1] = 127;
+}
+void reverse() {
+motor[port2] = -127;
+motor[port1] = -127;
 }
 void turn_left() {
 motor[port2] = 127;

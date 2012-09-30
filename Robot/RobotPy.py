@@ -74,7 +74,7 @@ class new:
          print "if(bVEXNETActive = true){"
 
     def pragma(self, port, name, sensor):
-         print "#pragma config(Sensor, in%d, %s, sensor%s);" % (port, name, sensor)
+         print "#pragma config(Sensor, in%d, \"%s\", sensor%s);" % (port, name, sensor)
 
     def reflect(self, port, switch):
          print "bMotorReflected[port%d] = %s;" % (port, switch)
