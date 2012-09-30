@@ -33,7 +33,7 @@ sub BASICS {
 sub KLAW_KONT {
     my $r = shift;
 
-    $r->start_void( "klaw_kont");
+    $r->start_void( "klaw_kont" );
         $r->int_var(
             name  => "POS",
             value => 0
@@ -46,7 +46,7 @@ sub KLAW_KONT {
             name  => "C_6",
             value => "vexRT[Ch6]"
         );
-        $r->start_if( "C_5 == 127");
+        $r->start_if( "C_5 == 127" );
             $r->start_if( "POS <= 1" );
                 $r->inc_plus( "POS" );
                 $r->motor(
