@@ -13,6 +13,11 @@ sub new {
     return bless $self, $class;
 };
 
+sub compile {
+    my ( $self, $filename ) = @_;
+    system("nbc $filename.nxc -sm+ -d -S=usb");
+}
+
 sub start_void {
     my ( $self, $name ) = @_;
     return print "void $name() {\n";
