@@ -5,9 +5,15 @@ use warnings;
 use Robot::Perl::Utils;
 use Robot::Perl;
 
-our $VERSION = 1.00;
-
 my $pre = Robot::Perl->new;
+my $r = Robot::Perl::Utils->new(
+    config => "/home/jbert/dev/data.yaml"
+);
+
+SETUP( $pre );
+BASICS( $r );
+KLAW_KONT( $r );
+MAIN_TASK( $r );
 
 sub SETUP {
     my $pre = shift;
@@ -119,13 +125,3 @@ sub MAIN_TASK {
     $r->end;
     return $r;
 };
-
-SETUP( $pre );
-
-my $r = Robot::Perl::Utils->new(
-    config => "/home/jbert/dev/data.yaml"
-);
-
-BASICS( $r );
-KLAW_KONT( $r );
-MAIN_TASK( $r );
