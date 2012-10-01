@@ -15,10 +15,10 @@ my %WriteMakefileArgs = (
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
   },
-  "DISTNAME" => "Robot-Perl",
+  "DISTNAME" => "RobotC-Wrapper",
   "EXE_FILES" => [],
   "LICENSE" => "perl",
-  "NAME" => "Robot::Perl",
+  "NAME" => "RobotC::Wrapper",
   "PREREQ_PM" => {
     "YAML" => "0.84"
   },

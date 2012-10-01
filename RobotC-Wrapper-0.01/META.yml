@@ -11,7 +11,7 @@ license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
-name: Robot-Perl
+name: RobotC-Wrapper
 requires:
   YAML: 0.84
 version: 0.01
