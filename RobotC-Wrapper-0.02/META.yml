@@ -14,4 +14,4 @@ meta-spec:
 name: RobotC-Wrapper
 requires:
   YAML: 0.84
-version: 0.01
+version: 0.02

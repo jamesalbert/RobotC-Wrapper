@@ -3,7 +3,6 @@ MANIFEST
 META.json
 META.yml
 Makefile.PL
-OUTPUT/perl_output.c
 README
 dist.ini
 lib/RobotC/Wrapper.pm
