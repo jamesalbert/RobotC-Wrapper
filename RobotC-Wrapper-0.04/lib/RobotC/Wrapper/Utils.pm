@@ -19,13 +19,16 @@ sub new {
     my $self = $class->SUPER::new;
     $self->{conf} = LoadFile( $opt{config} );
 
+    return bless $self, $class;
+}
+
+sub setup {
+    my $self = shift;
     $self->auto( $self->{conf}->{auto}->{state} );
     $self->reflect(
         port => $self->{conf}->{reflect}->{port},
         bool => $self->{conf}->{reflect}->{state}
     );
-
-    return bless $self, $class;
 }
 
 sub drive {
@@ -107,6 +110,7 @@ sub set_cont {
 
 sub basic_movements {
     my $self = shift;
+    $self->setup;
     $self->drive;
     $self->turn_left;
     $self->turn_right;

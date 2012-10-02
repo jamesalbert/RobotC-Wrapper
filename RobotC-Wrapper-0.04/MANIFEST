@@ -7,4 +7,3 @@ README
 dist.ini
 lib/RobotC/Wrapper.pm
 lib/RobotC/Wrapper/Utils.pm
-lib/RobotC/Wrapper/data.yaml
