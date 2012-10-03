@@ -233,29 +233,29 @@ RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
     #!/usr/bin/perl -w
 
     use strict;
+    use RobotC::Wrapper;
     use RobotC::Wrapper::Utils;
 
     my $SV = "SensorValue";
 
-    my $r = Robot::Perl::Utils->new(
+    my $u = Robot::Perl::Utils->new(
         config => "/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml"
     );
 
-    $r->basic_movements;
-    $r->start_task;
-    $r->call( "drive" );
-    $r->start_while( "true" );
-    $r->start_if( "true" );
-    $r->call( "turn_left" );
-    $r->end;
-    $r->end;
+    $u->basic_movements;
+
+    my $r = RobotC::Wrapper->new;
+
+    $r->start_void("function_name");
+        $r->motor(1, 127);
+        $r->motor(2, 127);
     $r->end;
 
 =head2 DESCRIPTION
 
-=head1 ROBOT::PERL
+=head1 RobotC::Wrapper
 
-    The Robot::Perl base library has a series of functions that you can call which will spit out RobotC.
+    The RobotC::Wrapper base library has a series of functions that you can call which will spit out RobotC.
     Start by initiating it.
 
     use Robot::Perl;
@@ -311,11 +311,15 @@ RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
 
     Starts an if statement. $condition is, of course, the condition.
 
-=head4 start_for(init => $init, end => $end, )
+=head4 start_else_if($condition)
 
-    Starts a for loop. Takes two arguments: a start value ( usually 0 ), and an end value,
+    Starts an elseif startement.
 
-=head4 start_while($condition, )
+=head4 start_for($var, init => $init, end => $end, )
+
+    Starts a for loop. Takes three arguments: the var to increment, a start value ( usually 0 ), and an end value,
+
+=head4 start_while($condition)
 
     Starts a while loop. Takes the condition.
 
@@ -323,10 +327,17 @@ RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
 
     Prints a brace "}" and starts a newline.
 
-=head4 var(type => $num, name => $name, value => $value)
+=head4 int var(name => $name, value => $value)
 
-    Declares a new variable, takes three arguments: a number symbolizing data
-    type ( 1-3; 1 => int, 2 => char, 3 => long ), name, and value.
+    Declares a new integer variable
+
+=head4 char var(name => $name, value => $value)
+
+    Declares a new char variable
+
+=head4 long var(name => $name, value => $value)
+
+    Declares a new long integer variable
 
 =head4 battery(name => $variable_name)
 
@@ -361,12 +372,12 @@ RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
 
     Does the same thing as if_sound, but checks for controller activity.
 
-=head4 pragma(in => "in2", name => $name, type => "Touch")
+=head4 pragma(in => 2, name => $name, type => "Touch")
 
     Sets up sensors. Should be the first thing called after start_robot.
     Takes three parameters: in port, name, and sensor type ("Touch, SONAR, etc").
 
-=head4 reflect(port => $port2, bool => "true")
+=head4 reflect(port => 2, bool => "true")
 
     Reflects a designated port, takes two parameters: port name ( "port2", "port3", etc ), and boolean ( most likely true ).
 
@@ -374,11 +385,19 @@ RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
 
     Toggles autonomous mode depending on the boolean parameter.
 
-=head4 motor(port => $port2, speed => $speed)
+=head4 inc_plus( $var )
+
+    increments a variable plus one ($var++)
+
+=head4 inc_minus( $var )
+
+    same as inc_plus but minus ($var--)
+
+=head4 motor(port => 2, speed => $speed)
 
     Sets motor value, takes two parameters: port name and speed ( -127 - 127 ).
 
-=head4 speed_up(port => $port2, speed => $increment)
+=head4 speed_up(port => 2, speed => $increment)
 
     Speeds up to motors, takes two arguments: port name, and a number to be added to the current speed.
 
@@ -394,7 +413,7 @@ RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
 
     Pauses the robot for the given amount of seconds. ( yes, SECONDS! )
 
-=head4 cont(port => $port2, channel => $Ch2)
+=head4 cont(port => 2, channel => 2)
 
     Denotes a given motor port to a transmitter channel.
 
