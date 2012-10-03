@@ -238,8 +238,8 @@ RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
 
     my $SV = "SensorValue";
 
-    my $u = Robot::Perl::Utils->new(
-        config => "/home/jbert/dev/RobotPerl/Robot/Perl/data.yaml"
+    my $u = RobotC::Wrapper::Utils->new(
+        config => "/home/jbert/path/to/data.yaml"
     );
 
     $u->basic_movements;
@@ -258,11 +258,9 @@ RobotC-Wrapper - An easy to read, fully functional RobotC for Vex wrapper.
     The RobotC::Wrapper base library has a series of functions that you can call which will spit out RobotC.
     Start by initiating it.
 
-    use Robot::Perl;
+    use RobotC::Wrapper;
 
-    my $r = RobotC::Wrapper->new(
-        config => '/the/path/to/the/yaml.yaml'
-    );
+    my $r = RobotC::Wrapper->new()
 
 =head1 THE USE OF YAML FILES
 
